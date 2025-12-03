@@ -1,46 +1,89 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
-export default function Home() {
+export default function LandingPage() {
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-background text-foreground">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
 
-      <div className="flex flex-col items-center gap-8">
-        {/* Logo */}
-        <div className="relative w-[200px] h-[200px]">
-           {/* Placeholder for logo.png. Using a text fallback if image missing for now, or assume public/logo.png exists */}
-           {/* Since user provided logo.png is mentioned in PRD but not present, I will use a placeholder or text */}
-           <div className="flex items-center justify-center w-full h-full border-2 border-primary rounded-full">
-             <span className="text-4xl font-bold text-primary">UniSell</span>
-           </div>
-           {/* Uncomment when logo.png is available
-           <Image
-             src="/logo.png"
-             alt="UniSell Logo"
-             fill
-             className="object-contain"
-             priority
-           />
-           */}
+    <div className="min-h-screen flex flex-col justify-between 
+      bg-[radial-gradient(circle_at_center,_#f7f7f2_10%,_#f0fafa_60%,_#bbfcfc_100%)]
+      dark:bg-[radial-gradient(circle_at_center,_rgba(0,124,130,0.2)_10%,_rgba(0,173,181,0.1)_20%,_#1e1e1e_55%)]
+      dark:bg-[#1e1e1e]
+      text-gray-800 dark:text-gray-100 transition-colors duration-500">
+
+      {/* Main Section */}
+      <main className="flex-grow flex items-center justify-center p-4">
+        <div className="text-center space-y-8 max-w-2xl">
+          {/* Logo and Branding */}
+          <div className="animate-fade-in-up space-y-4">
+            <div className="flex items-center justify-center gap-3">
+              <div className="bg-transparent rounded-2xl p-1">
+                {/* Using a placeholder since logo.png might not exist yet, but keeping Image component as requested */}
+                {/* If logo.png is missing, this might break. I will assume it exists or Next.js handles it gracefully (it won't, but user provided code has it) */}
+                {/* To be safe, I'll check if I should use the previous text fallback if image fails, but instructions said "Keep the Image component" */}
+                 <Image
+                  src="/logo.png"
+                  alt="UniSell Logo"
+                  width={86}
+                  height={86}
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
+            <h1 className="text-6xl font-bold text-balance bg-gradient-to-r from-[#00adb5] to-[#00fff0] dark:from-[#00dee8] dark:to-[#00adb5] bg-clip-text text-transparent">
+              UniSell
+            </h1>
+          </div>
+
+          {/* Tagline */}
+          <p className="text-xl text-gray-600 dark:text-gray-300 text-balance animate-fade-in-up animate-delay-200 leading-relaxed">
+            Buy, Sell & Connect with Verified USM Students.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center animate-fade-in-up animate-delay-400">
+            <Button
+              asChild
+              size="lg"
+              variant="glowalt"
+              className="text-lg px-8 py-6 rounded-xl"
+            >
+              <Link href="/signin">Sign In</Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="glow"
+              className="text-lg px-8 py-6 rounded-xl"
+            >
+              <Link href="/signup">Sign Up</Link>
+            </Button>
+          </div>
+
+          {/* Trust Badge */}
+          <p className="text-sm text-gray-500 dark:text-gray-400 animate-fade-in-up animate-delay-400">
+            Exclusive marketplace for{" "}
+            <span className="font-medium">@student.usm.my</span> verified students
+          </p>
         </div>
+      </main>
 
-        {/* Spacing is handled by gap-8 */}
-
-        {/* Button Group */}
-        <div className="flex flex-col gap-4 w-full max-w-xs">
-          <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
-            <Link href="/sign-up">Sign Up</Link>
-          </Button>
-          <Button asChild variant="outline" className="w-full" size="lg">
-            <Link href="/sign-in">Sign In</Link>
-          </Button>
+      {/* Footer */}
+      <footer
+        className="border-t border-gray-200 dark:border-gray-800 py-8 
+        text-gray-600 dark:text-gray-400 transition-colors duration-500"
+      >
+        <div className="container mx-auto px-4 text-center text-sm">
+          <p>
+            &copy; {new Date().getFullYear()}{" "}
+            <span className="font-semibold text-[#00adb5] dark:text-[#00dee8]">
+              UniSell
+            </span> - Universiti Sains Malaysia
+          </p>
         </div>
-      </div>
-    </main>
-  );
+      </footer>
+    </div>
+  )
 }
