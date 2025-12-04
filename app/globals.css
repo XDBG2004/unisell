@@ -188,96 +188,90 @@
 /* Glow Buttons */
 @layer components {
   .btn-glow {
-    @apply relative inline-flex items-center justify-center font-semibold rounded-xl cursor-pointer select-none transition-all duration-300;
-    @apply text-black bg-white border border-black outline-none z-0;
+    /* Removed fixed sizing and radius so it inherits from button.tsx */
+    @apply relative cursor-pointer select-none transition-all duration-300;
+    @apply text-black bg-white outline-none z-0;
+    box-shadow: 0px 4px 10px 0px #999;
   }
 
   .btn-glow::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      60deg,
-      #ff0000,
-      #ff7300,
-      #fffb00,
-      #48ff00,
-      #00ffd5,
-      #002bff,
-      #7a00ff,
-      #ff00c8,
-      #ff0000
-    );
+    background: linear-gradient(60deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
     background-size: 400% 400%;
     filter: blur(10px);
-    border-radius: inherit;
+    border-radius: inherit; /* Key: Inherits standard button radius */
     opacity: 0;
     transition: opacity 0.1s ease-in-out;
     animation: glowing 6s linear infinite;
     z-index: -1;
+    box-shadow: none;
   }
 
   .btn-glow:hover::before,
   .btn-glow:active::before {
     opacity: 1;
+    box-shadow: none;
   }
 
   .btn-glow::after {
+    box-shadow: none;
     content: '';
     position: absolute;
-    inset: 1px;
+    inset: 0;
     background: #fff;
     border-radius: inherit;
     z-index: -1;
   }
 
   .btn-glow:hover {
-    border-color: transparent;
+    box-shadow: none;
     background: #fff;
     color: #000;
   }
 
   .btn-glow:active {
-    border-color: transparent;
+    background: transparent;
     color: #000;
+    box-shadow: none;
   }
 
   .btn-glow:active::after {
     background: transparent;
+    box-shadow: none;
   }
 
-  /* 🌙 Dark Mode */
+  /* Dark Mode Overrides for btn-glow */
   .dark .btn-glow {
-    border: 1px solid #fff;
+    box-shadow: 0px 4px 10px 0px #111;
     background: #1e1e1e;
     color: #fff;
   }
-
   .dark .btn-glow::after {
     background: #1e1e1e;
+    box-shadow: none;
   }
-
   .dark .btn-glow:hover {
-    border-color: transparent;
+    box-shadow: none;
     background: transparent;
     color: #fff;
   }
-
   .dark .btn-glow:active {
-    border-color: transparent;
-    color: #fff;
-  }
-
-  .dark .btn-glow:active::after {
+    box-shadow: none;
     background: transparent;
+  } 
+  .dark .btn-glow:active::after { 
+    box-shadow: none;
+    background: transparent; 
   }
 
-/* 💠 Glow Alt */
+  /* --- GLOW ALT BUTTON (Neon Cyan) --- */
   .btn-glow-alt {
-    @apply relative inline-flex items-center justify-center font-bold rounded-xl cursor-pointer select-none transition-all duration-300;
-    @apply text-black bg-white border outline-none z-0;
-    border-color: #00dee8;
-    border: 1px solid #00dee8;
+    /* Removed fixed sizing and radius */
+    @apply relative cursor-pointer select-none transition-all duration-300;
+    @apply text-black bg-white outline-none z-0;
+    box-shadow: 0px 4px 10px 0px #999;
     background: #00dee8;
     color: #000;
   }
@@ -286,18 +280,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      60deg,
-      #ff0000,
-      #ff7300,
-      #fffb00,
-      #48ff00,
-      #00ffd5,
-      #002bff,
-      #7a00ff,
-      #ff00c8,
-      #ff0000
-    );
+    background: linear-gradient(60deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
     background-size: 400% 400%;
     filter: blur(10px);
     border-radius: inherit;
@@ -305,60 +288,151 @@
     transition: opacity 0.1s ease-in-out;
     animation: glowing 6s linear infinite;
     z-index: -1;
+    box-shadow: none;
   }
 
   .btn-glow-alt:hover::before,
   .btn-glow-alt:active::before {
     opacity: 1;
+    box-shadow: none;
   }
 
   .btn-glow-alt::after {
     content: '';
     position: absolute;
-    inset: 1px;
+    inset: 0; 
     background: #00dee8;
     border-radius: inherit;
     z-index: -1;
+    box-shadow: none;
   }
 
   .btn-glow-alt:hover {
     border-color: transparent;
     background: transparent;
     color: #000;
+    box-shadow: none;
   }
 
   .btn-glow-alt:active {
+    background: transparent;
     border-color: transparent;
     color: #000;
+    box-shadow: none;
   }
 
   .btn-glow-alt:active::after {
     background: transparent;
+    box-shadow: none;
   }
+  
 
+  /* Dark Mode Overrides for btn-glow-alt */
   .dark .btn-glow-alt {
-    border: 1px solid #00dee8;
+    box-shadow: 0px 4px 10px 0px #111;
     background: #00dee8;
     color: #000;
   }
   .dark .btn-glow-alt::after {
     background: #00dee8;
+    box-shadow: none;
   }
-
   .dark .btn-glow-alt:hover {
-    border-color: transparent;
+    box-shadow: none;
     background: transparent;
     color: #000;
   }
-
   .dark .btn-glow-alt:active {
-    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+  } 
+  .dark .btn-glow-alt:active::after { 
+    background: transparent; 
+    box-shadow: none;
+}
+
+  /* --- PURE GLOWING BUTTON (Neon Cyan) --- */
+  .btn-pure-glow {
+    /* Removed fixed sizing and radius */
+    @apply relative cursor-pointer select-none transition-all duration-300;
+    @apply text-black bg-white outline-none z-0;
+    background: #00dee8;
     color: #000;
   }
 
-  .dark .btn-glow-alt:active::after {
-    background: transparent;
+  .btn-pure-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(60deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    background-size: 400% 400%;
+    filter: blur(10px);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+    animation: glowing 6s linear infinite;
+    z-index: -1;
+    box-shadow: none;
   }
+
+  .btn-pure-glow:hover::before,
+  .btn-pure-glow:active::before {
+    opacity: 1;
+    box-shadow: none;
+  }
+
+  .btn-pure-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0; 
+    background: #00dee8;
+    border-radius: inherit;
+    z-index: -1;
+    box-shadow: none;
+  }
+
+  .btn-pure-glow:hover {
+    border-color: transparent;
+    background: transparent;
+    color: #000;
+    box-shadow: none;
+  }
+
+  .btn-pure-glow:active {
+    background: transparent;
+    border-color: transparent;
+    color: #000;
+    box-shadow: none;
+  }
+
+  .btn-pure-glow:active::after {
+    background: transparent;
+    box-shadow: none;
+  }
+  
+
+  /* Dark Mode Overrides for btn-pure-glow */
+  .dark .btn-pure-glow {
+    background: #00dee8;
+    color: #000;
+  }
+  .dark .btn-pure-glow::after {
+    background: #00dee8;
+    box-shadow: none;
+  }
+  .dark .btn-pure-glow:hover {
+    box-shadow: none;
+    background: transparent;
+    color: #000;
+  }
+  .dark .btn-pure-glow:active {
+    background: transparent;
+    box-shadow: none;
+  } 
+  .dark .btn-pure-glow:active::after { 
+    background: transparent; 
+    box-shadow: none;
+}
 }
 
 /* Animations */
