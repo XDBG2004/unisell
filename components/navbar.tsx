@@ -1,66 +1,80 @@
-import { createClient } from "@/utils/supabase/server"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Search, Plus } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { MessageSquare, Heart, Plus } from "lucide-react"
+import { SearchBar } from "@/components/search-bar"
 import { UserNav } from "@/components/user-nav"
-import { Input } from "@/components/ui/input"
 
-export async function Navbar() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+interface NavbarProps {
+  user?: {
+    email?: string
+    user_metadata?: {
+      full_name?: string
+      avatar_url?: string
+    }
+  } | null
+}
 
+export function Navbar({ user }: NavbarProps) {
   if (!user) return null
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center justify-between px-4">
+    <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
+      <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4">
         {/* Left: Logo */}
-        <div className="flex items-center gap-2 font-bold text-xl text-[#00adb5] dark:text-[#00dee8]">
-          <Link href="/" className="flex items-center gap-2">
-            <span>UniSell</span>
-          </Link>
+        <Link href="/" className="flex items-center gap-2">
+          <div className="text-2xl font-bold text-[#00adb5] dark:text-[#00dee8]">UniSell</div>
+        </Link>
+
+        {/* Center: SearchBar */}
+        <div className="hidden md:flex flex-1 max-w-md mx-4">
+          <SearchBar />
         </div>
 
-        {user ? (
-          <>
-            {/* Center: Search */}
-             <div className="hidden md:flex items-center flex-1 max-w-sm mx-4">
-                <div className="relative w-full">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Search items..."
-                    className="w-full pl-8 bg-background h-9"
-                  />
-                </div>
-             </div>
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2">
+          {/* Mobile Search Trigger (Optional, if SearchBar is hidden on mobile) */}
+          <div className="md:hidden">
+             {/* You might want a search icon here for mobile if SearchBar is hidden */}
+          </div>
 
-            {/* Right: Actions */}
-            <div className="flex items-center gap-4">
-              <Button asChild variant="outline" size="sm" className="gap-2 border-cyan-500/50 hover:bg-cyan-500/10">
-                <Link href="/sell">
-                  <Plus className="h-4 w-4" />
-                  <span className="hidden sm:inline">Sell Item</span>
+          {user ? (
+            <>
+              <Button variant="ghost" size="icon" asChild className="relative h-9 w-9 rounded-x text-foreground hover:bg-[#00dee8]! hover:text-black! transition-colors cursor-pointer">
+                <Link href="/chat">
+                  <MessageSquare className="h-5 w-5" />
+                  <span className="sr-only">Chat</span>
                 </Link>
               </Button>
-              <ThemeToggle />
-              <UserNav />
-            </div>
-          </>
-        ) : (
-          /* Not Logged In */
-          <div className="flex items-center gap-4">
-             <ThemeToggle />
-             <Button asChild variant="ghost" size="sm">
+
+              <Button variant="ghost" size="icon" asChild className="relative h-9 w-9 rounded-x text-foreground hover:bg-[#00dee8]! hover:text-black! transition-colors cursor-pointer">
+                <Link href="/favorites">
+                  <Heart className="h-5 w-5" />
+                  <span className="sr-only">Favorites</span>
+                </Link>
+              </Button>
+
+              <Button variant="pureglow" size="m" asChild className="hidden sm:flex text-black">
+                <Link href="/sell">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Post Item
+                </Link>
+              </Button>
+
+              <UserNav user={user} />
+            </>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button asChild variant="ghost" size="sm">
                 <Link href="/login">Sign In</Link>
-             </Button>
-             <Button asChild size="sm" className="bg-cyan-600 hover:bg-cyan-700 text-white">
+              </Button>
+              <Button asChild size="sm" className="bg-cyan-600 hover:bg-cyan-700 text-white">
                 <Link href="/signup">Sign Up</Link>
-             </Button>
-          </div>
-        )}
+              </Button>
+            </div>
+          )}
+
+        </div>
       </div>
-    </header>
+    </nav>
   )
 }

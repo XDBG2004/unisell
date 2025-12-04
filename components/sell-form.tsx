@@ -23,11 +23,54 @@ export function SellForm() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const subCategories: Record<string, string[]> = {
-    "Electronics": ["Mobile Phones", "Laptops", "Tablets", "Accessories"],
-    "Clothing": ["Men", "Women", "Unisex", "Shoes", "Bags"],
-    "Books": ["Textbooks", "Fiction", "Comics", "Notes"],
-    "Furniture": ["Table/Desk", "Chair", "Cabinet", "Bedding"],
-    "Others": ["Sports", "Music", "Stationary", "Miscellaneous"]
+    "Electronics": [
+      "Mobile Phones & Tablets",
+      "Computers & Laptops",
+      "Phone & Computer Accessories",
+      "TV, Audio & Video",
+      "Cameras & Photography",
+      "Gaming & Consoles"
+    ],
+    "Fashion": [
+      "Men's Clothing",
+      "Women's Clothing",
+      "Shoes",
+      "Bags & Wallets",
+      "Watches & Accessories"
+    ],
+    "Furniture & Living": [
+      "Tables & Desks",
+      "Chairs",
+      "Beds & Mattresses",
+      "Sofas",
+      "Storage & Organization",
+      "Home Decor"
+    ],
+    "Books & Stationery": [
+      "Textbooks",
+      "Course Notes & Past Years",
+      "Fiction & Non-Fiction",
+      "Comics & Manga",
+      "Stationery"
+    ],
+    "Room Rental": [
+      "Single Room",
+      "Shared Room",
+      "Whole Unit / House",
+      "Short-term / Homestay"
+    ],
+    "Vehicles": [
+      "Motorcycles",
+      "Bicycles",
+      "Cars",
+      "E-Scooters & Skateboards"
+    ],
+    "Others": [
+      "Sports & Equipment",
+      "Music Instruments",
+      "Tickets & Vouchers",
+      "Miscellaneous"
+    ]
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,11 +177,9 @@ export function SellForm() {
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Electronics">Electronics</SelectItem>
-                <SelectItem value="Clothing">Clothing</SelectItem>
-                <SelectItem value="Books">Books</SelectItem>
-                <SelectItem value="Furniture">Furniture</SelectItem>
-                <SelectItem value="Others">Others</SelectItem>
+                {Object.keys(subCategories).map((cat) => (
+                  <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

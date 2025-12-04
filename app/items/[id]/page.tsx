@@ -15,11 +15,11 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     .eq('id', id)
     .single()
 
-  if (error || !item) {
+  if (error || !item || item.status === 'deleted') {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
-        <h1 className="text-2xl font-bold">Item not found</h1>
-        <p className="text-muted-foreground">The item you are looking for does not exist or has been removed.</p>
+        <h1 className="text-2xl font-bold">Item Unavailable</h1>
+        <p className="text-muted-foreground">The item you are looking for has been removed by the seller.</p>
         <Button asChild variant="outline">
           <Link href="/">Back to Home</Link>
         </Button>

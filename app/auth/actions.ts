@@ -54,6 +54,13 @@ export async function signup(formData: FormData) {
   return { success: true }
 }
 
+export async function signout() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  revalidatePath('/', 'layout')
+  redirect('/login')
+}
+
 export async function completeOnboarding(formData: FormData) {
   const supabase = await createClient()
 
@@ -99,20 +106,18 @@ export async function completeOnboarding(formData: FormData) {
       matric_no: matricNo,
       ic_document_path: filePath,
       verification_status: 'pending',
-      usm_role: 'student'
     })
 
   if (updateError) {
     return { error: `Profile update failed: ${updateError.message}` }
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/')
-}
+  // Update Auth Session Metadata immediately
+  const { error: authError } = await supabase.auth.updateUser({
+    data: { full_name: fullName }
+  })
+  if (authError) console.error("Auth update failed:", authError)
 
-export async function signout() {
-  const supabase = await createClient()
-  await supabase.auth.signOut()
   revalidatePath('/', 'layout')
   redirect('/')
 }

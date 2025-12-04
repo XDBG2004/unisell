@@ -1,7 +1,10 @@
 'use server'
 
+import { Item } from "@/types"
+
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 export async function createListing(formData: FormData) {
   const supabase = await createClient()
@@ -88,4 +91,46 @@ export async function createListing(formData: FormData) {
   }
 
   redirect('/')
+}
+
+export async function markItemSold(itemId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: "Unauthorized" }
+
+  const { error } = await supabase
+    .from('items')
+    .update({ status: 'sold' })
+    .eq('id', itemId)
+    .eq('seller_id', user.id)
+
+  if (error) {
+    console.error("Error marking item sold:", error)
+    return { error: "Failed to update item" }
+  }
+
+  revalidatePath('/profile')
+  return { success: true }
+}
+
+export async function deleteItem(itemId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: "Unauthorized" }
+
+  const { error } = await supabase
+    .from('items')
+    .update({ status: 'deleted' })
+    .eq('id', itemId)
+    .eq('seller_id', user.id)
+
+  if (error) {
+    console.error("Error deleting item:", error)
+    return { error: "Failed to delete item" }
+  }
+
+  revalidatePath('/profile')
+  return { success: true }
 }
