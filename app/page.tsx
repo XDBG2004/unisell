@@ -6,16 +6,11 @@ import Image from "next/image"
 import { createClient } from "@/utils/supabase/server"
 import { AnnouncementBar } from "@/components/announcement-bar"
 import { CategoryCard } from "@/components/category-card"
+import { CategoryRail } from "@/components/category-rail"
 import { ItemCard } from "@/components/item-card"
 import { LandingPage } from "@/components/landing-page"
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
+
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ search?: string, category?: string }> }) {
   const supabase = await createClient()
@@ -75,36 +70,54 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
 
     const { data: items } = await query.returns<Item[]>()
 
-    const categories = [
-      "Electronics", 
-      "Fashion", 
-      "Furniture & Living", 
-      "Books & Stationery", 
-      "Room Rental", 
-      "Vehicles", 
-      "Others"
-    ]
-
-    const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-      "Electronics": <Smartphone className="h-8 w-8" />,
-      "Fashion": <Shirt className="h-8 w-8" />,
-      "Furniture & Living": <Armchair className="h-8 w-8" />,
-      "Books & Stationery": <Book className="h-8 w-8" />,
-      "Room Rental": <HomeIcon className="h-8 w-8" />,
-      "Vehicles": <Car className="h-8 w-8" />,
-      "Others": <Package className="h-8 w-8" />
+    const CATEGORIES_CONFIG: Record<string, { icon: React.ReactNode, shortName: string, color: string }> = {
+      "Electronics": { 
+        icon: <Smartphone className="h-8 w-8 sm:h-10 sm:w-10" />, 
+        shortName: "Electronics", 
+        color: "blue" 
+      },
+      "Fashion": { 
+        icon: <Shirt className="h-8 w-8 sm:h-10 sm:w-10" />, 
+        shortName: "Fashion", 
+        color: "pink" 
+      },
+      "Furniture & Living": { 
+        icon: <Armchair className="h-8 w-8 sm:h-10 sm:w-10" />, 
+        shortName: "Furniture", 
+        color: "amber" 
+      },
+      "Books & Stationery": { 
+        icon: <Book className="h-8 w-8 sm:h-10 sm:w-10" />, 
+        shortName: "Books", 
+        color: "emerald" 
+      },
+      "Room Rental": { 
+        icon: <HomeIcon className="h-8 w-8 sm:h-10 sm:w-10" />, 
+        shortName: "Room Rental", 
+        color: "violet" 
+      },
+      "Vehicles": { 
+        icon: <Car className="h-8 w-8 sm:h-10 sm:w-10" />, 
+        shortName: "Vehicles", 
+        color: "red" 
+      },
+      "Others": { 
+        icon: <Package className="h-8 w-8 sm:h-10 sm:w-10" />, 
+        shortName: "Others", 
+        color: "zinc" 
+      }
     }
 
     // Fetch Category Counts via RPC
     const { data: countsData } = await supabase.rpc('get_category_counts')
     
     // Merge Data
-    const categoryCounts = categories.map(cat => {
-      const match = countsData?.find((c: any) => c.category === cat)
+    const categoryCounts = Object.entries(CATEGORIES_CONFIG).map(([name, config]) => {
+      const match = countsData?.find((c: any) => c.category === name)
       return {
-        name: cat,
+        name,
         count: match ? match.count : 0,
-        icon: CATEGORY_ICONS[cat]
+        ...config
       }
     })
 
@@ -131,36 +144,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
             </div>
           </section>
 
-          {/* Categories Carousel */}
-          <section className="py-12 bg-muted/30">
-            <div className="container mx-auto px-4">
-              <h2 className="text-3xl font-bold mb-8 text-center md:text-left">Browse by Category</h2>
-              <div className="w-full max-w-6xl mx-auto px-4">
-                <Carousel
-                  opts={{
-                    align: "center",
-                    loop: true,
-                  }}
-                  className="w-full"
-                >
-                  <div className="flex items-center gap-4">
-                    <CarouselPrevious className="hidden md:flex static translate-y-0 h-12 w-12 border-2 border-primary/20 hover:bg-primary hover:text-white transition-colors" />
-                    
-                    <div className="flex-1 overflow-hidden">
-                      <CarouselContent className="-ml-4 items-stretch">
-                        {categoryCounts.map((category) => (
-                          <CarouselItem key={category.name} className="basis-[75%] md:basis-[45%] lg:basis-[25%] pl-4 h-full">
-                            <div className="p-1 h-full">
-                              <CategoryCard name={category.name} count={category.count} icon={category.icon} />
-                            </div>
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                    </div>
-
-                    <CarouselNext className="hidden md:flex static translate-y-0 h-12 w-12 border-2 border-primary/20 hover:bg-primary hover:text-white transition-colors" />
-                  </div>
-                </Carousel>
+          {/* Categories Scroll Rail */}
+          <section className="py-10 w-full">
+            <div className="container mx-auto px-4 mb-6">
+              <h2 className="text-2xl font-bold">Browse by Category</h2>
+            </div>
+              
+            <div className="w-full flex justify-center">
+              <div className="w-full mx-auto justify-center">
+                <CategoryRail categories={categoryCounts} />
               </div>
             </div>
           </section>
@@ -210,7 +202,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
 
         <footer className="bg-muted py-8 border-t border-border/40">
           <div className="container mx-auto px-4 text-center text-muted-foreground">
-            <p>&copy; 2024 UniSell. Built for USM Students.</p>
+            <p>&copy; 2025 UniSell. Built for USM Students.</p>
           </div>
         </footer>
       </div>
