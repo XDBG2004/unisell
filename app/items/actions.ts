@@ -22,6 +22,7 @@ export async function createListing(formData: FormData) {
   const description = formData.get("description") as string
   const meetup_area = formData.get("meetup_area") as string
   const images = formData.getAll("images") as File[]
+  const show_contact_info = formData.get("show_contact_info") === "true"
 
   if (!title || !price || !category || !sub_category || !condition || !description || !meetup_area) {
     return { error: "Please fill in all fields." }
@@ -29,6 +30,10 @@ export async function createListing(formData: FormData) {
 
   if (images.length === 0 || images[0].size === 0) {
      return { error: "Please upload at least one image." }
+  }
+
+  if (images.length > 5) {
+     return { error: "You can only upload up to 5 images." }
   }
 
   const imageUrls: string[] = []
@@ -83,6 +88,7 @@ export async function createListing(formData: FormData) {
       campus: userCampus,
       status: 'available',
       images: imageUrls,
+      show_contact_info: show_contact_info,
     })
 
   if (insertError) {
