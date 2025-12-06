@@ -78,7 +78,129 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
           </Link>
         </Button>
         
-        <div className="grid gap-8 lg:grid-cols-3">
+        {/* Mobile Layout - Shows only on screens < lg */}
+        <div className="flex flex-col gap-4 lg:hidden">
+          {/* Mobile: Image Carousel */}
+          <Card className="shadow-lg isolate">
+            <CardContent className="p-0">
+              <ImageCarousel images={listing.images} alt={listing.title} />
+            </CardContent>
+          </Card>
+
+          {/* Mobile: Combined Title/Price/Description Card */}
+          <Card className="shadow-lg isolate">
+            <CardContent className="p-6 space-y-4">
+              {/* Title */}
+              <h1 className="text-2xl font-bold text-balance">{listing.title}</h1>
+
+              {/* Price */}
+              <p className="text-3xl font-bold text-primary">{formatPrice(listing.price)}</p>
+
+              {/* Condition & Category Badges */}
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="outline">{listing.condition}</Badge>
+                {listing.category && <Badge variant="secondary">{listing.category}</Badge>}
+                {listing.status === 'sold' && <Badge variant="destructive">SOLD</Badge>}
+              </div>
+
+              {/* Preferred Meetup Area */}
+              {listing.meetup_area && (
+                <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                  <MapPin className="h-4 w-4" />
+                  <span>{listing.meetup_area}</span>
+                </div>
+              )}
+
+              {/* Description */}
+              <div className="pt-2">
+                <h2 className="mb-3 text-lg font-bold">Description</h2>
+                <p className="whitespace-pre-wrap text-muted-foreground">{listing.description}</p>
+              </div>
+
+              {/* Post Date */}
+              <div className="flex items-center gap-2 text-muted-foreground text-sm pt-2">
+                <Calendar className="h-4 w-4" />
+                <span>Posted on {formatDate(listing.created_at)}</span>
+              </div>
+
+              {/* Action Buttons - For Non-Owners */}
+              {!isOwnListing && listing.status !== 'sold' && (
+                <div className="space-y-3 pt-4">
+                  {/* Chat with Seller */}
+                  <Button 
+                    asChild 
+                    className="w-full bg-[#00dee8] hover:bg-[#00dee8] text-black font-semibold
+                      shadow-lg
+                      hover:shadow-[0_0_10px_rgba(0,222,232,0.5)] 
+                      hover:scale-[1.02] transition-all duration-100" 
+                    size="lg"
+                  >
+                    <Link href={`/chat/start?itemId=${listing.id}`}>
+                      <MessageSquare className="mr-2 h-5 w-5" />
+                      Chat with Seller
+                    </Link>
+                  </Button>
+
+                  {/* Favorite and Report - Side by Side */}
+                  <div className="flex gap-3">
+                    {/* Add to Favorites - Larger */}
+                    <div className="flex-3">
+                      <FavoriteButton itemId={listing.id} initialFavorited={isFavorited} />
+                    </div>
+                    
+                    {/* Report - Smaller */}
+                    <div className="flex-2">
+                      <Button 
+                        variant="outline" 
+                        size="lg" 
+                        className="w-full border-2 border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-500 hover:border-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:border-red-600 hover:scale-[1.02] transition-all duration-200" 
+                        asChild
+                      >
+                        <Link href={`/report?itemId=${listing.id}`}>
+                          <Flag className="mr-2 h-5 w-5" />
+                          Report
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Edit Button - For Owners */}
+              {isOwnListing && (
+                <div className="pt-4">
+                  <Button 
+                    asChild 
+                    className="w-full border-2 border-[#00dee8] dark:hover:border-[#00dee8] text-[#00dee8] hover:bg-[#00dee8] dark:hover:bg-[#00dee8] hover:text-black font-semibold shadow-md hover:shadow-lg hover:shadow-[#00dee8]/20 dark:hover:shadow-[#00dee8]/20 hover:scale-[1.02] transition-all duration-100" 
+                    variant="outline"
+                    size="lg"
+                  >
+                    <Link href={`/sell?edit=${listing.id}`}>Edit Listing</Link>
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Mobile: Seller Info */}
+          <Card className="shadow-lg isolate">
+            <CardContent className="px-3 py-2">
+              <h3 className="mb-2 font-bold">Seller Information</h3>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  {listing.seller.full_name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-medium">{listing.seller.full_name}</p>
+                  <p className="text-sm text-muted-foreground">{listing.seller.campus} Campus</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Desktop Layout - Shows only on screens >= lg */}
+        <div className="hidden lg:grid gap-8 lg:grid-cols-3">
           {/* Left Column - Images */}
           <div className="lg:col-span-2">
             <Card className="shadow-lg isolate">
@@ -143,9 +265,9 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
                     
                     {/* Report Button */}
                     <Button 
-                      variant="ghost" 
+                      variant="outline" 
                       size="lg" 
-                      className="w-full mt-6 text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 hover:scale-[1.02] transition-all duration-200" 
+                      className="w-full mt-6 border-2 border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-500 hover:border-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:border-red-600 hover:scale-[1.02] transition-all duration-200" 
                       asChild
                     >
                       <Link href={`/report?itemId=${listing.id}`}>
@@ -176,7 +298,7 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
               <CardContent className="p-6">
                 <h3 className="mb-4 font-bold">Seller Information</h3>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     {listing.seller.full_name.charAt(0).toUpperCase()}
                   </div>
                   <div>
