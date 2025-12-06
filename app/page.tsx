@@ -5,7 +5,6 @@ import { Search, ChevronLeft, ChevronRight, Smartphone, Shirt, Armchair, Book, H
 import Image from "next/image"
 import { createClient } from "@/utils/supabase/server"
 import { AnnouncementBar } from "@/components/announcement-bar"
-import { CategoryCard } from "@/components/category-card"
 import { CategoryRail } from "@/components/category-rail"
 import { ItemCard } from "@/components/item-card"
 import { LandingPage } from "@/components/landing-page"

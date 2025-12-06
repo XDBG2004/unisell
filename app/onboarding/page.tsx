@@ -28,8 +28,6 @@ export default async function OnboardingPage() {
     .eq('id', user.id)
     .single()
 
-  console.log("Current Profile Status:", profile)
-
   if (!profile) {
     // No profile found, treat as new user
     return (

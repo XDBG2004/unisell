@@ -131,7 +131,7 @@ export default function ChatPage() {
               }
             )
             .subscribe((status) => {
-              console.log("Chat Status:", status)
+
             })
             
           channelRef.current = channel
@@ -177,7 +177,6 @@ export default function ChatPage() {
       })
 
     if (error) {
-      console.error("Error sending message:", error)
       // Ideally show error toast or rollback
     }
   }

@@ -8,7 +8,7 @@ export function LandingPage() {
       bg-[radial-gradient(circle_at_center,#bbfcfc_10%,#f0fafa_60%,#f7f7f2_100%)]
       dark:bg-[radial-gradient(circle_at_center,rgba(0,124,130,0.2)_10%,rgba(0,173,181,0.1)_20%,#1e1e1e_55%)]
       text-foreground transition-colors duration-500">
-
+      
       {/* Main Section */}
       <main className="grow flex items-center justify-center p-4">
         <div className="text-center space-y-8 max-w-2xl">
