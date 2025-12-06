@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Search, ChevronLeft, ChevronRight, Smartphone, Shirt, Armchair, Book, Home as HomeIcon, Car, Package } from "lucide-react"
 import Image from "next/image"
 import { createClient } from "@/utils/supabase/server"
+import { getFavoriteIds } from "@/app/favorites/actions"
 import { AnnouncementBar } from "@/components/announcement-bar"
 import { CategoryRail } from "@/components/category-rail"
 import { ItemCard } from "@/components/item-card"
@@ -28,7 +29,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
     // If NOT verified, show Welcome Banner
     if (!isVerified) {
       return (
-        <div className="min-h-screen text-foreground flex items-center justify-center p-4">
+        <div className="min-h-[calc(100vh-4.5rem)] flex flex-col items-center justify-center p-4 text-foreground">
           <div className="glass-card max-w-2xl w-full p-8 text-center space-y-6">
             <div className="bg-cyan-500/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
               <Image src="/logo.png" alt="Logo" width={40} height={40} className="object-contain" />
@@ -71,6 +72,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
     }
 
     const { data: items } = await query.returns<Item[]>()
+
+    // Fetch user's favorite IDs
+    const favoriteObjects = await getFavoriteIds()
+    const favoriteIds = favoriteObjects.map(f => f.id)
 
     const CATEGORIES_CONFIG: Record<string, { icon: React.ReactNode, shortName: string, color: string }> = {
       "Electronics": { 
@@ -173,11 +178,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
             </div>
 
             {items && items.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {items.map((item) => (
                   <ItemCard 
                     key={item.id} 
                     item={item}
+                    isFavorited={favoriteIds.includes(item.id)}
                   />
                 ))}
               </div>

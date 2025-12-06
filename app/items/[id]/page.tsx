@@ -91,10 +91,10 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
           <Card className="shadow-lg isolate">
             <CardContent className="p-6 space-y-4">
               {/* Title */}
-              <h1 className="text-2xl font-bold text-balance">{listing.title}</h1>
+              <h1 className="text-3xl font-bold text-balance">{listing.title}</h1>
 
               {/* Price */}
-              <p className="text-3xl font-bold text-primary">{formatPrice(listing.price)}</p>
+              <p className="text-2xl font-bold text-primary">{formatPrice(listing.price)}</p>
 
               {/* Condition & Category Badges */}
               <div className="flex flex-wrap gap-2">
@@ -223,8 +223,8 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
             <Card className="shadow-lg isolate">
               <CardContent className="p-6 space-y-4">
                 <div>
-                  <h1 className="text-2xl font-bold text-balance mb-2">{listing.title}</h1>
-                  <p className="text-3xl font-bold text-primary">{formatPrice(listing.price)}</p>
+                  <h1 className="text-3xl font-bold text-balance mb-2">{listing.title}</h1>
+                  <p className="text-2xl font-bold text-primary">{formatPrice(listing.price)}</p>
                 </div>
 
                 <div className="flex flex-wrap gap-2">

@@ -1,19 +1,17 @@
 "use client"
 
-import Link from "next/link"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Heart, MapPin } from "lucide-react"
 import { toggleFavorite } from "@/app/favorites/actions"
 import { useState } from "react"
 
-interface ItemCardProps {
+interface GhostCardProps {
   item: any
-  isFavorited?: boolean
 }
 
-export function ItemCard({ item, isFavorited = false }: ItemCardProps) {
-  const [isFav, setIsFav] = useState(isFavorited)
+export function GhostCard({ item }: GhostCardProps) {
+  const [isFav, setIsFav] = useState(true)
   
   const timeAgo = (date: string) => {
     const seconds = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000)
@@ -30,7 +28,23 @@ export function ItemCard({ item, isFavorited = false }: ItemCardProps) {
     return "just now"
   }
 
-  // Category color mapping based on category-card.tsx
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    // Optimistic update
+    setIsFav(false)
+    
+    try {
+      await toggleFavorite(item.id)
+    } catch (error) {
+      // Revert on error
+      setIsFav(true)
+      console.error("Error toggling favorite:", error)
+    }
+  }
+
+  // Category color mapping
   const getCategoryColor = (category: string) => {
     const categoryLower = category.toLowerCase()
     
@@ -47,44 +61,40 @@ export function ItemCard({ item, isFavorited = false }: ItemCardProps) {
     } else if (categoryLower.includes('vehicle') || categoryLower.includes('transport')) {
       return { bg: 'bg-[#F6BE00]/10 dark:bg-[#FDFD96]/10', text: 'text-[#F6BE00] dark:text-[#FDFD96]' }
     } else {
-      // Others (Teal)
       return { bg: 'bg-[#0d9488]/10 dark:bg-[#99E1D9]/10', text: 'text-[#0d9488] dark:text-[#99E1D9]' }
     }
   }
 
   const categoryColors = item.category ? getCategoryColor(item.category) : { bg: 'bg-cyan-500/10', text: 'text-cyan-600 dark:text-cyan-400' }
 
-  const handleFavoriteClick = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    
-    // Optimistic update
-    setIsFav(!isFav)
-    
-    try {
-      await toggleFavorite(item.id)
-    } catch (error) {
-      // Revert on error
-      setIsFav(isFav)
-      console.error("Error toggling favorite:", error)
-    }
-  }
+  // Status badge styling
+  const statusBadge = item.status === 'deleted' 
+    ? { text: 'Deleted', className: 'bg-red-500 text-white' }
+    : { text: 'Sold', className: 'bg-gray-500 text-white' }
 
   return (
-    <Link href={`/items/${item.id}`} className="group h-full block">
-      <div className="flex flex-col h-full overflow-hidden transition-all duration-300 border border-gray-200/60 dark:border-gray-700/60 rounded-xl bg-white dark:bg-[#1e1e1e] text-card-foreground shadow-md hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1">
-        {/* Image */}
+    <div className="group h-full block opacity-60 cursor-not-allowed">
+      <div className="flex flex-col h-full overflow-hidden transition-all duration-300 border border-gray-200/60 dark:border-gray-700/60 rounded-xl bg-white dark:bg-[#1e1e1e] text-card-foreground shadow-md relative">
+        {/* Image with overlay */}
         <div className="relative aspect-square bg-muted">
           <Image 
             src={item.images?.[0] || '/placeholder.png'} 
             alt={item.title} 
             fill 
-            className="object-cover" 
+            className="object-cover grayscale" 
           />
-          {/* Heart Button Positioned Top Right */}
+          
+          {/* Status Overlay Badge */}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+            <Badge className={`text-lg px-4 py-2 ${statusBadge.className}`}>
+              {statusBadge.text}
+            </Badge>
+          </div>
+          
+          {/* Heart Button - Still clickable */}
           <button
             onClick={handleFavoriteClick}
-            className="absolute top-2 right-2 z-10 p-2 rounded-full bg-black/50 text-white hover:bg-[#00dee8] hover:text-black transition-colors backdrop-blur-sm"
+            className="absolute top-2 right-2 z-10 p-2 rounded-full bg-black/50 text-white hover:bg-[#00dee8] hover:text-black transition-colors backdrop-blur-sm cursor-pointer"
           >
             <Heart size={16} className={isFav ? "fill-current text-red-500" : ""} />
           </button>
@@ -93,41 +103,41 @@ export function ItemCard({ item, isFavorited = false }: ItemCardProps) {
         {/* Content */}
         <div className="p-4 pt-2 pb-2 flex flex-col gap-2 flex-1">
           {/* Title */}
-          <h3 className="font-semibold text-sm sm:text-lg md:text-xl line-clamp-1 group-hover:text-[#00dee8] transition-colors" title={item.title}>
+          <h3 className="font-semibold text-xl line-clamp-1 text-muted-foreground" title={item.title}>
             {item.title}
           </h3>
           
           {/* Price */}
-          <p className="text-sm sm:text-base font-bold text-[#00dee8]">
+          <p className="text-base font-bold text-muted-foreground">
             {item.price === 0 ? "Free" : `RM ${item.price.toFixed(2)}`}
           </p>
 
-          {/* Badges Row: Condition | Category | Subcategory */}
-          <div className="flex flex-wrap gap-1.5 mt-0">
-            <Badge variant="outline" className="hidden sm:inline-flex text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 border-muted-foreground/30 text-muted-foreground whitespace-nowrap">
+          {/* Badges Row */}
+          <div className="flex flex-wrap gap-1.5 mt-1">
+            <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 border-muted-foreground/30 text-muted-foreground whitespace-nowrap">
               {item.condition}
             </Badge>
-            <Badge variant="secondary" className={`text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 whitespace-nowrap ${categoryColors.bg} ${categoryColors.text} hover:opacity-80`}>
+            <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 h-5 whitespace-nowrap ${categoryColors.bg} ${categoryColors.text} hover:opacity-80`}>
               {item.category}
             </Badge>
             {item.sub_category && (
-              <Badge variant="secondary" className="hidden sm:inline-flex text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 bg-muted text-muted-foreground hover:bg-muted/80 whitespace-nowrap">
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-5 bg-muted text-muted-foreground hover:bg-muted/80 whitespace-nowrap">
                 {item.sub_category}
               </Badge>
             )}
           </div>
         </div>
 
-        {/* Footer - Full width border */}
+        {/* Footer */}
         <div className="border-t border-gray-300/70 dark:border-gray-700/30">
-          <div className="px-4 py-2 sm:py-3 flex items-center justify-between text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
-            <div className="hidden sm:flex items-center gap-1">
+          <div className="px-4 py-3 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-1">
               <span>{item.seller?.full_name || 'Unknown'}</span>
             </div>
             
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+            <div className="flex items-center gap-2">
               {item.meetup_area && (
-                <div className="hidden sm:flex items-center gap-1">
+                <div className="flex items-center gap-1">
                   <MapPin className="h-3 w-3" />
                   <span>{item.meetup_area}</span>
                 </div>
@@ -137,6 +147,6 @@ export function ItemCard({ item, isFavorited = false }: ItemCardProps) {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }

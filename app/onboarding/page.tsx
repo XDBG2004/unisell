@@ -31,7 +31,7 @@ export default async function OnboardingPage() {
   if (!profile) {
     // No profile found, treat as new user
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="flex min-h-[calc(100vh-4.5rem)] items-center justify-center p-4">
         <OnboardingForm />
       </div>
     )
@@ -44,7 +44,7 @@ export default async function OnboardingPage() {
   if (profile.ic_document_path) {
     // User has already submitted
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="flex min-h-[calc(100vh-4.5rem)] items-center justify-center p-4">
         <div className="w-full max-w-md glass-card flex flex-col gap-6 py-6">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center text-cyan-500">Verification in Progress</CardTitle>
