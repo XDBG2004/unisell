@@ -182,14 +182,14 @@ export default function ChatPage() {
   }
 
   if (!conversation || !userId) {
-    return <div className="min-h-screen flex items-center justify-center">Loading chat...</div>
+    return <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center">Loading chat...</div>
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] md:h-screen bg-background">
+    <div className="flex flex-col h-full max-h-full bg-background overflow-hidden">
       {/* Header */}
-      <header className="border-b border-border/40 bg-background/95 backdrop-blur p-4 flex items-center gap-4 sticky top-0 z-10">
-        <Button asChild variant="ghost" size="icon">
+      <header className="border-b border-border/40 bg-background/95 backdrop-blur p-4 flex items-center gap-4 z-10 shrink-0">
+        <Button asChild variant="ghost" size="icon" className="md:hidden">
           <Link href="/chat">
             <ArrowLeft className="h-5 w-5" />
           </Link>
@@ -219,32 +219,34 @@ export default function ChatPage() {
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => {
-          const isMe = msg.sender_id === userId
-          return (
-            <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-              <div 
-                className={`max-w-[80%] md:max-w-[60%] px-4 py-2 rounded-2xl ${
-                  isMe 
-                    ? 'bg-cyan-600 text-white rounded-tr-none' 
-                    : 'bg-muted text-foreground rounded-tl-none'
-                }`}
-              >
-                <p>{msg.content}</p>
-                <p className={`text-[10px] mt-1 ${isMe ? 'text-cyan-100' : 'text-muted-foreground'}`}>
-                  {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="space-y-4">
+          {messages.map((msg) => {
+            const isMe = msg.sender_id === userId
+            return (
+              <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                <div 
+                  className={`max-w-[80%] md:max-w-[60%] px-4 py-2 rounded-2xl ${
+                    isMe 
+                      ? 'bg-cyan-600 text-white rounded-tr-none' 
+                      : 'bg-muted text-foreground rounded-tl-none'
+                  }`}
+                >
+                  <p>{msg.content}</p>
+                  <p className={`text-[10px] mt-1 ${isMe ? 'text-cyan-100' : 'text-muted-foreground'}`}>
+                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
               </div>
-            </div>
-          )
-        })}
-        <div ref={messagesEndRef} />
+            )
+          })}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-border/40 bg-background">
-        <form onSubmit={sendMessage} className="flex gap-2 max-w-4xl mx-auto">
+      <div className="p-4 border-t border-border/40 bg-background shrink-0">
+        <form onSubmit={sendMessage} className="flex gap-2">
           <Input 
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
