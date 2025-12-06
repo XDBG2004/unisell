@@ -54,7 +54,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
     // Base Query
     let query = supabase
       .from('items')
-      .select('*')
+      .select(`
+        *,
+        seller:profiles!seller_id(full_name, campus)
+      `)
       .eq('status', 'available')
       .order('created_at', { ascending: false })
 
@@ -157,43 +160,35 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           </section>
 
           {/* Recent Listings */}
-          <section className="py-12 container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold">Recent Listings</h2>
-              <div className="flex gap-2">
-                 {search && (
-                    <Button variant="outline" asChild>
-                       <Link href="/">Clear Filters</Link>
-                    </Button>
-                 )}
-                 {category !== 'All' && (
-                    <Button variant="outline" asChild>
-                       <Link href="/">Clear Category</Link>
-                    </Button>
-                 )}
-              </div>
+          <section className="container mx-auto px-4 py-8">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-2xl font-bold">
+                {search ? `Search results for "${search}"` : "Recent Listings"}
+              </h2>
+              {search || category !== 'All' ? (
+                <Button variant="outline" asChild>
+                  <Link href="/">Clear filters</Link>
+                </Button>
+              ) : null}
             </div>
 
             {items && items.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {items.map((item) => (
                   <ItemCard 
                     key={item.id} 
-                    id={item.id}
-                    title={item.title}
-                    price={item.price}
-                    condition={item.condition}
-                    images={item.images}
-                    category={item.category}
+                    item={item}
                   />
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                <p className="text-lg">No items found matching your criteria.</p>
-                <Button variant="link" asChild className="mt-2">
-                  <Link href="/">Clear all filters</Link>
-                </Button>
+              <div className="glass-card rounded-lg border bg-card text-card-foreground shadow-sm">
+                <div className="flex flex-col items-center justify-center py-12 text-center p-6">
+                  <p className="text-lg text-muted-foreground">No listings found</p>
+                  <Button asChild className="mt-4 bg-[#00dee8] text-black hover:bg-[#00dee8]/80">
+                    <Link href="/sell">Post the first item</Link>
+                  </Button>
+                </div>
               </div>
             )}
           </section>

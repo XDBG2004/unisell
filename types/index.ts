@@ -14,6 +14,10 @@ export interface Item {
   buyer_id?: string | null;
   show_contact_info?: boolean;
   created_at: string;
+  seller?: {
+    full_name: string | null;
+    campus: string;
+  };
 }
 
 export interface Profile {
