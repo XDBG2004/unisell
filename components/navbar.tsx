@@ -18,7 +18,7 @@ export function Navbar({ user }: NavbarProps) {
   if (!user) return null
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 w-full bg-white dark:bg-[#1e1e1e]">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4">
         {/* Left: Logo */}
         <Link href="/" className="flex items-center gap-2">

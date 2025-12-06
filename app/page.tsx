@@ -152,12 +152,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           </section>
 
           {/* Categories Scroll Rail */}
-          <section className="py-10 w-full">
-            <div className="container mx-auto px-4 mb-6">
-              <h2 className="text-2xl font-bold">Browse by Category</h2>
+          <section className="py-10 pb-2 w-full">
+            <div className="container mx-auto px-4 mb-2">
+              <div className="absolute left-[10vw] pb-6">
+                <h2 className="text-2xl font-bold select-none">Browse by Category</h2>
+              </div>
             </div>
               
-            <div className="w-full flex justify-center">
+            <div className="w-full flex justify-center mt-8">
               <div className="w-full mx-auto justify-center">
                 <CategoryRail categories={categoryCounts} />
               </div>
@@ -167,9 +169,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           {/* Recent Listings */}
           <section className="container mx-auto px-4 py-8">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-2xl font-bold">
-                {search ? `Search results for "${search}"` : "Recent Listings"}
-              </h2>
+              <div className="absolute left-[10vw]">
+                <h2 className="text-2xl font-bold select-none">
+                  {search ? `Search results for "${search}"` : "Recent Listings"}
+                </h2>
+              </div>
               {search || category !== 'All' ? (
                 <Button variant="outline" asChild>
                   <Link href="/">Clear filters</Link>
@@ -178,14 +182,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
             </div>
 
             {items && items.length > 0 ? (
-              <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {items.map((item) => (
-                  <ItemCard 
-                    key={item.id} 
-                    item={item}
-                    isFavorited={favoriteIds.includes(item.id)}
-                  />
-                ))}
+              <div className="w-full mt-12">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {items.map((item) => (
+                    <ItemCard 
+                      key={item.id} 
+                      item={item}
+                      isFavorited={favoriteIds.includes(item.id)}
+                    />
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="glass-card rounded-lg border bg-card text-card-foreground shadow-sm">

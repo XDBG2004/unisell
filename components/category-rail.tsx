@@ -178,7 +178,7 @@ export function CategoryRail({ categories }: CategoryRailProps) {
           className={`
             flex gap-4 overflow-x-auto w-full
             px-4 
-            pb-6 sm:pb-8 md:pb-10
+            pb-4 sm:pb-4 md:pb-6
             pt-6 sm:pt-6 md:pt-8
             scrollbar-hide /* Hide native scrollbar everywhere */
             select-none /* Stops text highlighting */
@@ -194,7 +194,7 @@ export function CategoryRail({ categories }: CategoryRailProps) {
       {/* Draggable Scrollbar */}
       {/* Draggable Scrollbar (Conditional) */}
       {showScrollbar && (
-        <div className="w-full flex justify-center mt-6 transition-opacity duration-300 animate-in fade-in">
+        <div className="w-full flex justify-center mt-4 mb-2 transition-opacity duration-300 animate-in fade-in">
           <div 
             ref={scrollbarTrackRef}
             className="w-48 md:w-64 h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden relative cursor-pointer"
@@ -202,7 +202,7 @@ export function CategoryRail({ categories }: CategoryRailProps) {
             onClick={handleScrollbarInteract}
           >
             <div 
-              className={`h-full bg-[#00dee8] rounded-full absolute top-0 left-0 hover:bg-[#00c4ce] ${isDraggingScrollbar ? 'cursor-grabbing' : 'cursor-grab'}`}
+              className={`h-full bg-[#00dee8] rounded-full absolute top-0 left-0 hover:bg-[#00dee8] ${isDraggingScrollbar ? 'cursor-grabbing' : 'cursor-grab'}`}
               onMouseDown={handleThumbMouseDown}
               style={{ 
                 width: '40%', 
