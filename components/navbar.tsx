@@ -31,7 +31,7 @@ export function Navbar({ user }: NavbarProps) {
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white dark:bg-[#1e1e1e] shadow-md dark:shadow-[0_2px_6px_0px_rgba(255,255,255,0.1),0_0px_4px_-1px_rgba(255,255,255,0.1)]">
-      <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4">
+      <div className="mx-auto flex h-16 w-full max-w-screen-2xl items-center justify-between px-4">
         {/* Left: Logo */}
         <Link href="/" className="flex items-center gap-2">
           {/* Logo Image - Show on mobile and large screens, hide on medium */}
@@ -45,7 +45,7 @@ export function Navbar({ user }: NavbarProps) {
             />
           </div>
           {/* Text - Hide on mobile, show on medium and large */}
-          <div className="hidden md:block text-2xl font-[TitleFont] tracking-tight text-[#00adb5] dark:text-[#00dee8]">
+          <div className="hidden md:block text-2xl font-[TitleFont] tracking-normal text-[#00adb5] dark:text-[#00dee8]">
             UniSell
           </div>
         </Link>
@@ -94,11 +94,12 @@ export function Navbar({ user }: NavbarProps) {
                 variant="pureglow" 
                 size="m" 
                 asChild 
-                className={`hidden sm:flex text-black`}
+                className="flex text-black font-[TitleFont] font-normal"
               >
                 <Link href="/sell">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Post Item
+                  <Plus className="h-4 w-4" />
+                  <span className="sm:hidden">Post</span>
+                  <span className="hidden sm:inline">Post Item</span>
                 </Link>
               </Button>
 
