@@ -33,7 +33,7 @@ export function SearchBar() {
         <Input
           type="search"
           placeholder="Search items..."
-          className="w-full pr-12 pl-6 bg-white dark:bg-[#2a2a2a] h-12 text-lg font-semibold shadow-lg rounded-full border-0 focus-visible:ring-2 focus-visible:ring-[#00dee8] placeholder:text-gray-400 placeholder:font-normal"
+          className="w-full pr-12 pl-6 bg-white dark:bg-[#2a2a2a] h-12 text-md md:text-sm font-[TitleFont] tracking-wide shadow-lg rounded-full border-0 focus-visible:ring-2 focus-visible:ring-[#00dee8] placeholder:text-gray-400 placeholder:font-normal"
           value={term}
           onChange={(e) => setTerm(e.target.value)}
         />

@@ -62,16 +62,16 @@ export function CategoryCard({ name, count, icon, shortName, color }: CategoryCa
         </div>
 
         {/* Text (Inherits text color) */}
-        <span className="block sm:hidden text-[10px] font-bold leading-tight w-full wrap-break-word">
+        <span className="block sm:hidden text-[10px] font-[TitleFont] tracking-wide leading-tight w-full wrap-break-word">
           {shortName}
         </span>
-        <span className="hidden sm:block text-xs md:text-sm font-bold leading-tight w-full wrap-break-word">
+        <span className="hidden sm:block text-xs md:text-sm font-[TitleFont] tracking-wide leading-tight w-full wrap-break-word">
           {name}
         </span>
        
         {/* Count (Restored) */}
         {count !== undefined && (
-          <span className="hidden sm:block text-[10px] md:text-xs opacity-80 mt-1 font-medium">
+          <span className="hidden sm:block text-[10px] md:text-xs opacity-70 mt-1 font-[TitleFont] tracking-wide">
             {count} items
           </span>
         )}

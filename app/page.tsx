@@ -165,7 +165,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           <section className="py-10 pb-2 w-full">
             <div className="container mx-auto px-4 mb-2">
               <div className="absolute left-[10vw] pb-6">
-                <h2 className="text-2xl font-bold select-none">Browse by Category</h2>
+                <h2 className="text-2xl font-[TitleFont] select-none">Browse by Category</h2>
               </div>
             </div>
               
@@ -180,7 +180,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
           <section className="container mx-auto px-4 py-8">
             <div className="mb-6 flex items-center justify-between">
               <div className="absolute left-[10vw]">
-                <h2 className="text-2xl font-bold select-none">
+                <h2 className="text-2xl font-[TitleFont] select-none">
                   {search ? `Search results for "${search}"` : "Recent Listings"}
                 </h2>
               </div>
@@ -193,7 +193,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
 
             {items && items.length > 0 ? (
               <div className="w-full mt-12">
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                   {items.map((item) => (
                     <ItemCard 
                       key={item.id} 

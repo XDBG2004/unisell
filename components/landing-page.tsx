@@ -26,28 +26,28 @@ export function LandingPage() {
                 />
               </div>
             </div>
-            <h1 className="text-6xl font-bold text-balance bg-linear-to-r from-cyan-600 to-cyan-400 dark:from-[#3bf2fc] dark:to-[#019097] bg-clip-text text-transparent">
+            <h1 className="text-6xl font-normal font-[TitleFont] text-balance bg-linear-to-r from-cyan-600 to-cyan-400 dark:from-[#3bf2fc] dark:to-[#019097] bg-clip-text text-transparent">
               UniSell
             </h1>
           </div>
 
           {/* Tagline */}
-          <p className="text-xl text-muted-foreground text-balance animate-fade-in-up animate-delay-200 leading-relaxed">
+          <p className="font-[TitleFont] text-lg text-muted-foreground text-balance animate-fade-in-up animate-delay-200 leading-relaxed">
             Buy, Sell & Connect with Verified USM Students.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center animate-fade-in-up animate-delay-400">
-            <Button asChild size="lg" variant="glowalt" className="text-lg px-8 py-6 rounded-xl">
+          <div className="font-[TitleFont] flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center animate-fade-in-up animate-delay-400">
+            <Button asChild size="lg" variant="glowalt" className="font-normal text-lg px-8 py-6 rounded-xl">
               <Link href="/login">Sign In</Link>
             </Button>
-            <Button asChild size="lg" variant="glow" className="text-lg px-8 py-6 rounded-xl">
+            <Button asChild size="lg" variant="glow" className="font-normal text-lg px-8 py-6 rounded-xl">
               <Link href="/signup">Sign Up</Link>
             </Button>
           </div>
 
           {/* Trust Badge */}
-          <p className="text-sm text-muted-foreground animate-fade-in-up animate-delay-400">
+          <p className="text-xs text-muted-foreground animate-fade-in-up animate-delay-400">
             Exclusive marketplace for <span className="font-medium text-foreground">@student.usm.my</span> verified students
           </p>
         </div>

@@ -45,7 +45,9 @@ export function Navbar({ user }: NavbarProps) {
             />
           </div>
           {/* Text - Hide on mobile, show on medium and large */}
-          <div className="hidden md:block text-2xl font-bold text-[#00adb5] dark:text-[#00dee8]">UniSell</div>
+          <div className="hidden md:block text-2xl font-[TitleFont] tracking-tight text-[#00adb5] dark:text-[#00dee8]">
+            UniSell
+          </div>
         </Link>
 
         {/* Right: Actions */}

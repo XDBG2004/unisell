@@ -93,25 +93,25 @@ export function ItemCard({ item, isFavorited = false }: ItemCardProps) {
         {/* Content */}
         <div className="p-4 pt-2 pb-2 flex flex-col gap-2 flex-1">
           {/* Title */}
-          <h3 className="font-semibold text-sm sm:text-lg md:text-xl line-clamp-1 group-hover:text-[#00dee8] transition-colors" title={item.title}>
+          <h3 className="font-[TitleFont] tracking-wide font-normal text-sm sm:text-lg md:text-xl line-clamp-1 group-hover:text-[#00dee8] transition-colors" title={item.title}>
             {item.title}
           </h3>
           
           {/* Price */}
-          <p className="text-sm sm:text-base font-bold text-[#00dee8]">
+          <p className="text-sm sm:text-base font-[TitleFont] tracking-wide text-[#00dee8]">
             {item.price === 0 ? "Free" : `RM ${item.price.toFixed(2)}`}
           </p>
 
           {/* Badges Row: Condition | Category | Subcategory */}
           <div className="flex flex-wrap gap-1.5 mt-0">
-            <Badge variant="outline" className="hidden sm:inline-flex text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 border-muted-foreground/30 text-muted-foreground whitespace-nowrap">
+            <Badge variant="outline" className="hidden sm:inline-flex text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 border-muted-foreground/30 text-muted-foreground whitespace-nowrap font-[TitleFont] tracking-wide font-normal">
               {item.condition}
             </Badge>
-            <Badge variant="secondary" className={`text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 whitespace-nowrap ${categoryColors.bg} ${categoryColors.text} hover:opacity-80`}>
+            <Badge variant="secondary" className={`text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 whitespace-nowrap ${categoryColors.bg} ${categoryColors.text} hover:opacity-80 font-[TitleFont] tracking-wide font-normal`}>
               {item.category}
             </Badge>
             {item.sub_category && (
-              <Badge variant="secondary" className="hidden sm:inline-flex text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 bg-muted text-muted-foreground hover:bg-muted/80 whitespace-nowrap">
+              <Badge variant="secondary" className="hidden sm:inline-flex text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 bg-muted text-muted-foreground hover:bg-muted/80 whitespace-nowrap font-[TitleFont] tracking-wide font-normal">
                 {item.sub_category}
               </Badge>
             )}
