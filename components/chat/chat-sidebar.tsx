@@ -24,10 +24,10 @@ export function ChatSidebar({ conversations, currentChatId }: ChatSidebarProps) 
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-[#2c2c2c]">
+    <div className="flex flex-col h-full bg-[#fafafa] dark:bg-[#2c2c2c] border-r border-gray-200 dark:border-none z-10 shadow-md dark:shadow-[2px_0_6px_0px_rgba(255,255,255,0.1),0_0px_4px_-1px_rgba(255,255,255,0.1)]">
       {/* Header */}
-      <div className="p-4 border-b border-border/40 bg-gray-100 dark:bg-gray-800">
-        <h1 className="text-xl font-bold">Messages</h1>
+      <div className="p-6 border-b border-gray-300 dark:border-gray-800 bg-gray-100 dark:bg-[#1e1e1e] shadow-md dark:shadow-[0_2px_6px_0px_rgba(255,255,255,0.1),0_0px_4px_-1px_rgba(255,255,255,0.1)]">
+        <h1 className="text-2xl font-[TitleFont] tracking-wide font-normal">Messages</h1>
       </div>
 
       {/* Conversation List */}
@@ -44,14 +44,14 @@ export function ChatSidebar({ conversations, currentChatId }: ChatSidebarProps) 
                   key={conv.id}
                   href={`/chat/${conv.id}`}
                   className={cn(
-                    "block p-4 transition-colors hover:bg-muted/50",
+                    "block p-4 font-[TitleFont] tracking-wide font-normal transition-colors hover:bg-muted/50",
                     isActive && "bg-[#00dee8]/10 hover:bg-[#00dee8]/15"
                   )}
                 >
                   <div className="flex items-start gap-3">
                     {/* Avatar */}
                     <div className="shrink-0 w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                      <span className="text-lg font-bold text-cyan-600">
+                      <span className="text-lg font-normal text-cyan-600">
                         {otherUser?.full_name?.[0]?.toUpperCase() || '?'}
                       </span>
                     </div>
@@ -59,18 +59,18 @@ export function ChatSidebar({ conversations, currentChatId }: ChatSidebarProps) 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2 mb-1">
-                        <h3 className="font-semibold text-sm truncate">
+                        <h3 className="font-normal text-sm truncate">
                           {otherUser?.full_name || 'Unknown User'}
                         </h3>
                         {lastMessage?.created_at && (
-                          <span className="text-xs text-muted-foreground shrink-0">
+                          <span className="text-xs text-muted-foreground shrink-0 font-normal">
                             {timeAgo(lastMessage.created_at)}
                           </span>
                         )}
                       </div>
                       
                       {lastMessage?.content && (
-                        <p className="text-sm text-muted-foreground truncate">
+                        <p className="text-sm text-muted-foreground truncate font-normal">
                           {lastMessage.content}
                         </p>
                       )}

@@ -38,10 +38,13 @@ export default function ChatPage() {
   const [conversation, setConversation] = useState<Conversation | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
   const channelRef = useRef<any>(null)
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+    }
   }
 
   useEffect(() => {
@@ -182,13 +185,13 @@ export default function ChatPage() {
   }
 
   if (!conversation || !userId) {
-    return <div className="min-h-[calc(100vh-4rem)] bg-[#181818] flex items-center justify-center">Loading chat...</div>
+    return <div className="min-h-[calc(100vh-4rem)] dark:bg-[#181818] bg-white flex items-center justify-center font-[TitleFont] tracking-wide font-normal">Loading chat...</div>
   }
 
   return (
-    <div className="flex flex-col h-full max-h-full bg-[#181818] overflow-hidden">
+    <div className="flex flex-col h-full max-h-full dark:bg-[#181818] bg-[#f0f8ff] overflow-hidden">
       {/* Header */}
-      <header className="border-b border-border/40 bg-background/95 backdrop-blur p-4 flex items-center gap-4 z-10 shrink-0">
+      <header className="font-[TitleFont] tracking-wide font-normal border-b border-gray-300 dark:border-none bg-background/95 backdrop-blur p-4 flex items-center gap-4 z-10 shrink-0 shadow-md dark:shadow-[0px_2px_6px_0px_rgba(255,255,255,0.1)]">
         <Button asChild variant="ghost" size="icon" className="md:hidden">
           <Link href="/chat">
             <ArrowLeft className="h-5 w-5" />
@@ -198,13 +201,13 @@ export default function ChatPage() {
         <div className="flex items-center gap-3">
            <div className="relative h-10 w-10 rounded-full overflow-hidden bg-muted">
               {/* Placeholder Avatar */}
-              <div className="flex items-center justify-center h-full w-full bg-cyan-500/20 text-cyan-600 font-bold">
+              <div className="flex items-center justify-center h-full w-full bg-cyan-500/20 text-cyan-600 font-normal">
                  {conversation.other_user.full_name?.[0]?.toUpperCase() || '?'}
               </div>
            </div>
            <div>
-              <h2 className="font-semibold leading-none">{conversation.other_user.full_name}</h2>
-              <p className="text-xs text-muted-foreground mt-1">
+              <h2 className="font-normal leading-none">{conversation.other_user.full_name}</h2>
+              <p className="text-xs text-muted-foreground mt-1 font-normal">
                  {conversation.item.title} • RM {conversation.item.price}
               </p>
            </div>
@@ -213,13 +216,13 @@ export default function ChatPage() {
 
       {/* Deleted Item Alert */}
       {conversation.item.status === 'deleted' && (
-        <div className="bg-destructive/10 text-destructive px-4 py-2 text-center text-sm font-medium border-b border-destructive/20">
+        <div className="font-[TitleFont] tracking-wide bg-destructive/10 text-destructive px-4 py-2 text-center text-sm font-normal border-b border-destructive/20">
           This item has been deleted by the seller.
         </div>
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4">
         <div className="space-y-4">
           {messages.map((msg) => {
             const isMe = msg.sender_id === userId
@@ -228,12 +231,12 @@ export default function ChatPage() {
                 <div 
                   className={`max-w-[80%] md:max-w-[60%] px-4 py-2 rounded-2xl ${
                     isMe 
-                      ? 'bg-cyan-600 text-white rounded-tr-none' 
-                      : 'bg-muted text-foreground rounded-tl-none'
+                      ? 'bg-[#45f6ff] dark:bg-[#005a5f] text-black dark:text-white rounded-tr-none shadow-lg' 
+                      : 'dark:bg-[#222222] bg-white text-foreground rounded-tl-none shadow-lg'
                   }`}
                 >
                   <p>{msg.content}</p>
-                  <p className={`text-[10px] mt-1 ${isMe ? 'text-cyan-100' : 'text-muted-foreground'}`}>
+                  <p className={`text-[10px] mt-1 ${isMe ? 'text-gray-800 dark:text-gray-200' : 'text-muted-foreground'}`}>
                     {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
@@ -245,7 +248,7 @@ export default function ChatPage() {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-border/40 bg-background shrink-0">
+      <div className="p-4 z-5 border-t border-gray-300 dark:border-none bg-background shrink-0 shadow-[-2px_0px_6px_0px_rgba(0,0,0,0.1),-2px_0px_6px_0px_rgba(255,255,255,0.1)]">
         <form onSubmit={sendMessage} className="flex gap-2">
           <Input 
             value={newMessage}
