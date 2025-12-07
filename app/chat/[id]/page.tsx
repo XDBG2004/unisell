@@ -182,11 +182,11 @@ export default function ChatPage() {
   }
 
   if (!conversation || !userId) {
-    return <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center">Loading chat...</div>
+    return <div className="min-h-[calc(100vh-4rem)] bg-[#181818] flex items-center justify-center">Loading chat...</div>
   }
 
   return (
-    <div className="flex flex-col h-full max-h-full bg-background overflow-hidden">
+    <div className="flex flex-col h-full max-h-full bg-[#181818] overflow-hidden">
       {/* Header */}
       <header className="border-b border-border/40 bg-background/95 backdrop-blur p-4 flex items-center gap-4 z-10 shrink-0">
         <Button asChild variant="ghost" size="icon" className="md:hidden">

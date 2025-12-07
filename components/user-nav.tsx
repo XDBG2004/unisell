@@ -21,15 +21,22 @@ interface UserNavProps {
       avatar_url?: string
     }
   }
+  isActive?: boolean
 }
 
-export function UserNav({ user }: UserNavProps) {
+export function UserNav({ user, isActive = false }: UserNavProps) {
   const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || "Student"
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-x text-foreground hover:bg-[#00dee8]! hover:text-black! transition-colors cursor-pointer">
+        <Button 
+          variant="navicon" 
+          size="icon" 
+          className={`relative h-9 w-9 rounded-x cursor-pointer ${
+            isActive ? 'bg-[#00dee8] text-black' : ''
+          }`}
+        >
           <User className="h-6 w-6" />
         </Button>
       </DropdownMenuTrigger>

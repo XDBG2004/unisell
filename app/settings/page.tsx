@@ -10,7 +10,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-screen">
+    <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-4rem)]">
       <h1 className="text-3xl font-bold mb-8">Settings</h1>
       <div className="glass-card p-12 text-center">
         <p className="text-xl text-muted-foreground">App Settings Coming Soon...</p>

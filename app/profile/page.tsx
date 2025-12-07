@@ -21,7 +21,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-screen space-y-8">
+    <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-4rem)] space-y-8">
       <h1 className="text-3xl font-bold">My Profile</h1>
 
       <div className="max-w-2xl mx-auto">

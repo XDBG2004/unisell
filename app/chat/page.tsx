@@ -2,7 +2,7 @@ import { MessageCircle } from "lucide-react"
 
 export default function ChatEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-background">
+    <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-[#181818]">
       <div className="bg-muted/50 rounded-full p-8 mb-6">
         <MessageCircle className="h-16 w-16 text-muted-foreground" />
       </div>
