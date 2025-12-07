@@ -9,6 +9,7 @@ import { AnnouncementBar } from "@/components/announcement-bar"
 import { CategoryRail } from "@/components/category-rail"
 import { ItemCard } from "@/components/item-card"
 import { LandingPage } from "@/components/landing-page"
+import { SearchBar } from "@/components/search-bar"
 
 
 
@@ -147,6 +148,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
                 <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
                   <ChevronRight className="h-6 w-6" />
                 </Button>
+              </div>
+            </div>
+          </section>
+
+          {/* Search Bar Section */}
+          <section className="py-6 bg-background">
+            <div className="container mx-auto px-4">
+              <div className="max-w-2xl mx-auto">
+                <SearchBar />
               </div>
             </div>
           </section>

@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, Heart, Plus } from "lucide-react"
-import { SearchBar } from "@/components/search-bar"
 import { UserNav } from "@/components/user-nav"
 
 interface NavbarProps {
@@ -34,13 +34,19 @@ export function Navbar({ user }: NavbarProps) {
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4">
         {/* Left: Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="text-2xl font-bold text-[#00adb5] dark:text-[#00dee8]">UniSell</div>
+          {/* Logo Image - Show on mobile and large screens, hide on medium */}
+          <div className="relative h-10 w-10 md:hidden lg:block">
+            <Image 
+              src="/logo2.png" 
+              alt="UniSell Logo" 
+              width={40} 
+              height={40}
+              className="object-contain"
+            />
+          </div>
+          {/* Text - Hide on mobile, show on medium and large */}
+          <div className="hidden md:block text-2xl font-bold text-[#00adb5] dark:text-[#00dee8]">UniSell</div>
         </Link>
-
-        {/* Center: SearchBar */}
-        <div className="hidden md:flex flex-1 max-w-md mx-4">
-          <SearchBar />
-        </div>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">

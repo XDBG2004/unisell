@@ -17,7 +17,7 @@ export function LandingPage() {
             <div className="flex items-center justify-center gap-3">
               <div className="bg-transparent rounded-2xl p-1">
                 <Image
-                  src="/logo.png"
+                  src="/logo2.png"
                   alt="UniSell Logo"
                   width={86}
                   height={86}
