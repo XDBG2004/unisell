@@ -49,11 +49,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       )
     }
 
-    // Parse Search Params
-    const search = (await searchParams)?.search || ''
-    const category = (await searchParams)?.category || 'All'
-
-    // Base Query
+    // Base Query - Recent Items (no filtering)
     let query = supabase
       .from('items')
       .select(`
@@ -62,15 +58,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       `)
       .eq('status', 'available')
       .order('created_at', { ascending: false })
-
-    // Apply Filters
-    if (search) {
-      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`)
-    }
-
-    if (category && category !== 'All') {
-      query = query.eq('category', category)
-    }
 
     const { data: items } = await query.returns<Item[]>()
 
@@ -178,17 +165,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
 
           {/* Recent Listings */}
           <section className="container mx-auto px-4 py-8">
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6">
               <div className="absolute left-[10vw]">
                 <h2 className="text-2xl font-[TitleFont] select-none">
-                  {search ? `Search results for "${search}"` : "Recent Listings"}
+                  Recent Listings
                 </h2>
               </div>
-              {search || category !== 'All' ? (
-                <Button variant="outline" asChild>
-                  <Link href="/">Clear filters</Link>
-                </Button>
-              ) : null}
             </div>
 
             {items && items.length > 0 ? (

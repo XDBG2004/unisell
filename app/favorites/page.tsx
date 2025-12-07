@@ -75,8 +75,7 @@ export default async function FavoritesPage() {
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <Heart className="h-8 w-8 text-red-500 fill-current" />
+          <h1 className="text-3xl font-[TitleFont] tracking-wide font-normal flex items-center gap-3">
             My Favorites
           </h1>
           <p className="text-muted-foreground mt-2">

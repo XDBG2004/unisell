@@ -41,7 +41,7 @@ export default async function MyListingsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-4rem)] space-y-8">
-      <h1 className="text-3xl font-bold">My Inventory</h1>
+      <h1 className="text-3xl font-[TitleFont] font-normal">My Inventory</h1>
 
       <div className="glass-card p-6 min-h-[500px]">
         <Tabs defaultValue="active" className="w-full">
