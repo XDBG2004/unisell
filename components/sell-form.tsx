@@ -177,13 +177,13 @@ export function SellForm() {
   return (
     <div className="w-full max-w-2xl glass-card flex flex-col gap-6 py-8 px-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold text-[#00adb5] dark:text-[#00dee8]">Sell an Item</h1>
-        <p className="text-muted-foreground">List your item for sale in the marketplace</p>
+        <h1 className="text-3xl font-[TitleFont] font-normal text-[#00adb5] dark:text-[#00dee8]">Sell an Item</h1>
+        <p className="text-muted-foreground font-[TitleFont] font-normal">List your item for sale in the marketplace</p>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-6">
         {/* Image Upload */}
-        <div className="space-y-2">
+        <div className="space-y-2 font-[TitleFont] font-normal">
           <Label>Item Images <span className="text-xs text-muted-foreground ml-2">(Max 5)</span></Label>
           <div className="grid grid-cols-3 gap-4">
             {/* Upload Button */}
@@ -222,13 +222,13 @@ export function SellForm() {
         </div>
 
         {/* Title */}
-        <div className="space-y-2">
+        <div className="space-y-2 font-[TitleFont] font-normal">
           <Label htmlFor="title">Title</Label>
           <Input id="title" name="title" placeholder="e.g. Calculus Textbook" required />
         </div>
 
         {/* Price */}
-        <div className="space-y-2">
+        <div className="space-y-2 font-[TitleFont] font-normal">
           <Label htmlFor="price">Price (RM)</Label>
           <div className="relative">
             <span className="absolute left-4 top-2.5 text-muted-foreground pointer-events-none">RM</span>
@@ -248,7 +248,7 @@ export function SellForm() {
 
         {/* Category & Sub-Category */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
+          <div className="space-y-2 font-[TitleFont] font-normal">
             <Label htmlFor="category">Category</Label>
             <Select name="category" onValueChange={setCategory} required>
               <SelectTrigger>
@@ -262,7 +262,7 @@ export function SellForm() {
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 font-[TitleFont] font-normal">
             <Label htmlFor="sub_category">Sub-Category</Label>
             <Select name="sub_category" disabled={!category} required>
               <SelectTrigger>
@@ -279,7 +279,7 @@ export function SellForm() {
 
         {/* Condition & Meetup Area */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
+          <div className="space-y-2 font-[TitleFont] font-normal">
             <Label htmlFor="condition">Condition</Label>
             <Select name="condition" required>
               <SelectTrigger>
@@ -294,14 +294,14 @@ export function SellForm() {
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 font-[TitleFont] font-normal">
             <Label htmlFor="meetup_area">Preferred Meetup Area</Label>
             <Input id="meetup_area" name="meetup_area" placeholder="e.g., Fajar Harapan Cafe or DTSP" required />
           </div>
         </div>
 
         {/* Description */}
-        <div className="space-y-2">
+        <div className="space-y-2 font-[TitleFont] font-normal">
           <Label htmlFor="description">Description</Label>
           <textarea
             id="description"
@@ -313,7 +313,7 @@ export function SellForm() {
         </div>
 
         {/* Privacy Control */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 font-[TitleFont] font-normal">
             <input 
                 type="checkbox" 
                 id="show_contact_info" 
@@ -328,7 +328,7 @@ export function SellForm() {
         <div className="flex gap-4 pt-2">
             <Button 
                 type="submit" 
-                className="flex-2 bg-cyan-600 hover:bg-cyan-700 text-white text-lg h-12" 
+                className="flex-2 bg-cyan-600 hover:bg-cyan-700 text-white text-lg h-12 font-[TitleFont] font-normal" 
                 disabled={loading}
             >
                 {loading ? "Listing Item..." : "List Item"}
@@ -338,7 +338,7 @@ export function SellForm() {
                 type="button" 
                 variant="ghost" 
                 onClick={() => router.push('/')}
-                className="flex-1 text-lg h-12 border border-gray-400 hover:bg-gray-200"
+                className="flex-1 text-lg h-12 border border-gray-400 hover:bg-gray-200 font-[TitleFont] font-normal"
             >
                 Cancel
             </Button>

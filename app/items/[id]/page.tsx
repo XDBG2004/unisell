@@ -3,10 +3,11 @@ import { createClient } from "@/utils/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { MapPin, Calendar, MessageSquare, Flag, ArrowLeft } from "lucide-react"
+import { MapPin, Calendar, MessageSquare, Flag } from "lucide-react"
 import Link from "next/link"
 import { FavoriteButton } from "@/components/favorite-button"
 import { ImageCarousel } from "@/components/image-carousel"
+import { BackButton } from "@/components/back-button"
 
 export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
@@ -67,16 +68,9 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <main className="container relative z-10 mx-auto px-4 py-8">
         {/* Back Button */}
-        <Button 
-          asChild 
-          variant="ghost" 
-          className="mb-6 group hover:text-[#00dee8] hover:scale-105 transition-all duration-300 ease-out"
-        >
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform duration-300" />
-            Back to Home
-          </Link>
-        </Button>
+        <div className="mb-6">
+          <BackButton />
+        </div>
         
         {/* Mobile Layout - Shows only on screens < lg */}
         <div className="flex flex-col gap-4 lg:hidden">

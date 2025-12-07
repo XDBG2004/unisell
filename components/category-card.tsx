@@ -43,7 +43,7 @@ export function CategoryCard({ name, count, icon, shortName, color }: CategoryCa
   const accentClass = colorStyles[color] || colorStyles.zinc
 
   return (
-    <Link href={`/?category=${encodeURIComponent(name)}`} className="block shrink-0 snap-start group">
+    <Link href={`/search?category=${encodeURIComponent(name)}`} className="block shrink-0 snap-start group">
       <div className={`
         /* STANDARD CARD BASE */
         glass-card
