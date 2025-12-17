@@ -2,7 +2,7 @@
 
 import { createClient } from "@/utils/supabase/client"
 import Link from "next/link"
-import { User, List, LogOut, History, Settings } from "lucide-react"
+import { User, List, LogOut, History, Settings, LayoutDashboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -22,9 +22,10 @@ interface UserNavProps {
     }
   }
   isActive?: boolean
+  isAdmin?: boolean
 }
 
-export function UserNav({ user, isActive = false }: UserNavProps) {
+export function UserNav({ user, isActive = false, isAdmin = false }: UserNavProps) {
   const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || "Student"
 
   return (
@@ -47,6 +48,17 @@ export function UserNav({ user, isActive = false }: UserNavProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {isAdmin && (
+          <>
+            <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#00dee8]/50 transition-colors font-medium text-[#00adb5] dark:text-[#00dee8]">
+              <Link href="/admin">
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                <span>Admin Portal</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem asChild className="cursor-pointer focus:bg-[#00dee8]/50 transition-colors font-medium">
           <Link href="/profile">
             <User className="mr-2 h-4 w-4" />

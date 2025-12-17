@@ -15,6 +15,7 @@ export default async function ChatLayout({
   }
 
   // Fetch conversations with latest message and other user details
+  // Filter out conversations where current user has deleted them
   const { data: conversations, error } = await supabase
     .from('conversations')
     .select(`
@@ -30,9 +31,22 @@ export default async function ChatLayout({
     console.error("Error fetching conversations:", error)
   }
 
+  // Filter conversations based on deleted status
+  const activeConversations = (conversations || []).filter((conv) => {
+    const isBuyer = conv.buyer_id === user.id
+    const isSeller = conv.seller_id === user.id
+    
+    // Hide if buyer deleted and user is buyer
+    if (isBuyer && conv.buyer_deleted) return false
+    // Hide if seller deleted and user is seller
+    if (isSeller && conv.seller_deleted) return false
+    
+    return true
+  })
+
   // Fetch latest message for each conversation
   const conversationsWithMessages = await Promise.all(
-    (conversations || []).map(async (conv) => {
+    activeConversations.map(async (conv) => {
       const { data: lastMessage } = await supabase
         .from('messages')
         .select('content, created_at, sender_id')

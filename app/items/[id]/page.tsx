@@ -3,11 +3,13 @@ import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Calendar, MessageSquare, Flag } from "lucide-react";
+import { MapPin, Calendar, MessageSquare, Flag, Star } from "lucide-react";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/favorite-button";
 import { ImageCarousel } from "@/components/image-carousel";
 import { BackButton } from "@/components/back-button";
+import { getSellerRating } from "@/app/reviews/actions";
+import { ReportModal } from "@/components/report-modal";
 
 export default async function ListingDetailPage({
   params,
@@ -57,6 +59,9 @@ export default async function ListingDetailPage({
     .single();
 
   const isFavorited = !!favorite;
+
+  // Fetch seller rating
+  const { averageRating, totalReviews } = await getSellerRating(listing.seller.id);
 
   const formatPrice = (price: number) => {
     return price === 0 ? "Free" : `RM ${price.toFixed(2)}`;
@@ -168,17 +173,22 @@ export default async function ListingDetailPage({
 
                     {/* Report - Smaller */}
                     <div className="flex-2">
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="w-full border-2 border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-500 hover:border-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:border-red-600 hover:scale-[1.02] transition-all duration-200"
-                        asChild
-                      >
-                        <Link href={`/report?itemId=${listing.id}`}>
-                          <Flag className="mr-2 h-5 w-5" />
-                          Report
-                        </Link>
-                      </Button>
+                      <ReportModal
+                        type="listing"
+                        id={listing.id}
+                        name={listing.title}
+                        trigger={
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="lg"
+                            className="w-full border-2 border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-500 hover:border-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:border-red-600 hover:scale-[1.02] transition-all duration-200"
+                          >
+                            <Flag className="mr-2 h-5 w-5" />
+                            Report
+                          </Button>
+                        }
+                      />
                     </div>
                   </div>
                 </div>
@@ -208,11 +218,33 @@ export default async function ListingDetailPage({
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   {listing.seller.full_name.charAt(0).toUpperCase()}
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="font-medium">{listing.seller.full_name}</p>
                   <p className="text-sm text-muted-foreground">
                     {listing.seller.campus} Campus
                   </p>
+                  {/* Seller Rating */}
+                  {totalReviews > 0 ? (
+                    <div className="flex items-center gap-1 mt-1">
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-3 w-3 ${
+                              star <= Math.round(averageRating)
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {averageRating.toFixed(1)} ({totalReviews} {totalReviews === 1 ? 'review' : 'reviews'})
+                      </span>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-muted-foreground mt-1">No reviews yet</p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -300,17 +332,22 @@ export default async function ListingDetailPage({
                     />
 
                     {/* Report Button */}
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="w-full mt-6 border-2 border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-500 hover:border-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:border-red-600 hover:scale-[1.02] transition-all duration-200"
-                      asChild
-                    >
-                      <Link href={`/report?itemId=${listing.id}`}>
-                        <Flag className="mr-2 h-5 w-5" />
-                        Report Listing
-                      </Link>
-                    </Button>
+                    <ReportModal
+                      type="listing"
+                      id={listing.id}
+                      name={listing.title}
+                      trigger={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="lg"
+                          className="w-full mt-6 border-2 border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 hover:bg-red-500 hover:border-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:border-red-600 hover:scale-[1.02] transition-all duration-200"
+                        >
+                          <Flag className="mr-2 h-5 w-5" />
+                          Report Listing
+                        </Button>
+                      }
+                    />
                   </div>
                 )}
 
@@ -339,11 +376,33 @@ export default async function ListingDetailPage({
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     {listing.seller.full_name.charAt(0).toUpperCase()}
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium">{listing.seller.full_name}</p>
                     <p className="text-sm text-muted-foreground">
                       {listing.seller.campus} Campus
                     </p>
+                    {/* Seller Rating */}
+                    {totalReviews > 0 ? (
+                      <div className="flex items-center gap-1 mt-1">
+                        <div className="flex items-center gap-0.5">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-3 w-3 ${
+                                star <= Math.round(averageRating)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {averageRating.toFixed(1)} ({totalReviews} {totalReviews === 1 ? 'review' : 'reviews'})
+                        </span>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground mt-1">No reviews yet</p>
+                    )}
                   </div>
                 </div>
               </CardContent>

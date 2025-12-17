@@ -86,7 +86,7 @@ export async function createListing(formData: FormData) {
       description,
       meetup_area,
       campus: userCampus,
-      status: 'available',
+      status: 'pending', // New listings await admin approval
       images: imageUrls,
       show_contact_info: show_contact_info,
     })
@@ -99,12 +99,40 @@ export async function createListing(formData: FormData) {
   redirect('/')
 }
 
+export async function completeDeal(itemId: string, buyerId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: "Unauthorized" }
+
+  // Update item status and set buyer
+  const { error } = await supabase
+    .from('items')
+    .update({ 
+      status: 'sold',
+      buyer_id: buyerId 
+    })
+    .eq('id', itemId)
+    .eq('seller_id', user.id) // Only seller can mark as sold
+
+  if (error) {
+    console.error("Error completing deal:", error)
+    return { error: "Failed to complete deal" }
+  }
+
+  revalidatePath('/chat')
+  revalidatePath(`/items/${itemId}`)
+  revalidatePath('/profile')
+  return { success: true }
+}
+
 export async function markItemSold(itemId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) return { error: "Unauthorized" }
 
+  // Mark as sold without specifying buyer (for sales outside the platform)
   const { error } = await supabase
     .from('items')
     .update({ status: 'sold' })
@@ -117,6 +145,7 @@ export async function markItemSold(itemId: string) {
   }
 
   revalidatePath('/profile')
+  revalidatePath('/my-listings')
   return { success: true }
 }
 

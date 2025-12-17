@@ -1,6 +1,19 @@
+"use client"
+
 import Link from "next/link"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, MoreVertical, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ConversationUnreadBadge } from "./conversation-unread-badge"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { deleteConversation } from "@/app/chat/actions"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 interface ChatSidebarProps {
   conversations: any[]
@@ -21,6 +34,31 @@ export function ChatSidebar({ conversations, currentChatId }: ChatSidebarProps) 
     interval = seconds / 60
     if (interval > 1) return Math.floor(interval) + "m"
     return "now"
+  }
+
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const router = useRouter()
+
+  const handleDelete = async (e: React.MouseEvent, conversationId: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    if (!confirm('Delete this conversation? Messages will be hidden from your view.')) return
+    
+    setDeletingId(conversationId)
+    const result = await deleteConversation(conversationId)
+    
+    if (result.success) {
+      // If we deleted the currently open conversation, redirect to chat list
+      if (currentChatId === conversationId) {
+        router.push('/chat')
+      } else {
+        router.refresh()
+      }
+    } else {
+      alert(result.error || 'Failed to delete conversation')
+    }
+    setDeletingId(null)
   }
 
   return (
@@ -44,7 +82,7 @@ export function ChatSidebar({ conversations, currentChatId }: ChatSidebarProps) 
                   key={conv.id}
                   href={`/chat/${conv.id}`}
                   className={cn(
-                    "block p-4 font-[TitleFont] tracking-wide font-normal transition-colors hover:bg-muted/50",
+                    "group block p-4 font-[TitleFont] tracking-wide font-normal transition-colors hover:bg-muted/50",
                     isActive && "bg-[#00dee8]/10 hover:bg-[#00dee8]/15"
                   )}
                 >
@@ -62,11 +100,14 @@ export function ChatSidebar({ conversations, currentChatId }: ChatSidebarProps) 
                         <h3 className="font-normal text-sm truncate">
                           {otherUser?.full_name || 'Unknown User'}
                         </h3>
-                        {lastMessage?.created_at && (
-                          <span className="text-xs text-muted-foreground shrink-0 font-normal">
-                            {timeAgo(lastMessage.created_at)}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-2 shrink-0">
+                          {lastMessage?.created_at && (
+                            <span className="text-xs text-muted-foreground font-normal">
+                              {timeAgo(lastMessage.created_at)}
+                            </span>
+                          )}
+                          <ConversationUnreadBadge conversationId={conv.id} />
+                        </div>
                       </div>
                       
                       {lastMessage?.content && (
@@ -80,6 +121,33 @@ export function ChatSidebar({ conversations, currentChatId }: ChatSidebarProps) 
                           {conv.item.title}
                         </p>
                       )}
+                    </div>
+
+                    {/* Kebab Menu - Shows on hover */}
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" onClick={(e) => e.preventDefault()}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            className="h-8 w-8"
+                            disabled={deletingId === conv.id}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={(e) => handleDelete(e, conv.id)}
+                            className="text-red-600 cursor-pointer"
+                            disabled={deletingId === conv.id}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            {deletingId === conv.id ? 'Deleting...' : 'Delete Chat'}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 </Link>
