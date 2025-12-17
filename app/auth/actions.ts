@@ -81,6 +81,25 @@ export async function completeOnboarding(formData: FormData) {
     return { error: 'IC/Passport document is required' }
   }
 
+  // Check if user has an existing IC document and delete it
+  const { data: existingProfile } = await supabase
+    .from('profiles')
+    .select('ic_document_path')
+    .eq('id', user.id)
+    .single()
+
+  if (existingProfile?.ic_document_path) {
+    console.log('[completeOnboarding] Deleting old IC document:', existingProfile.ic_document_path)
+    const { error: deleteError } = await supabase.storage
+      .from('private-documents')
+      .remove([existingProfile.ic_document_path])
+    
+    if (deleteError) {
+      console.error('[completeOnboarding] Failed to delete old document:', deleteError)
+      // Continue anyway - not critical
+    }
+  }
+
   // Upload file
   const fileExt = file.name.split('.').pop()
   const filePath = `${user.id}/ic_document.${fileExt}`
@@ -88,14 +107,14 @@ export async function completeOnboarding(formData: FormData) {
   const { error: uploadError } = await supabase.storage
     .from('private-documents')
     .upload(filePath, file, {
-      upsert: true,
+      upsert: true, // Allows resubmission overwrite
     })
 
   if (uploadError) {
     return { error: `Upload failed: ${uploadError.message}` }
   }
 
-  // Update profile
+  // Update profile (handles both new submission and resubmission)
   const { error: updateError } = await supabase
     .from('profiles')
     .upsert({
@@ -105,7 +124,8 @@ export async function completeOnboarding(formData: FormData) {
       campus: campus as any,
       matric_no: matricNo,
       ic_document_path: filePath,
-      verification_status: 'pending',
+      verification_status: 'pending', // Reset to pending on resubmission
+      rejection_reason: null, // Clear previous rejection reason
     })
 
   if (updateError) {

@@ -9,6 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 import Link from "next/link"
 
 export const dynamic = 'force-dynamic'
@@ -41,8 +43,30 @@ export default async function OnboardingPage() {
     redirect('/')
   }
 
+  // Handle rejected status - show form with rejection alert
+  if (profile.verification_status === 'rejected') {
+    return (
+      <div className="flex min-h-[calc(100vh-4.5rem)] items-center justify-center p-4">
+        <div className="w-full max-w-2xl space-y-6">
+          {/* Rejection Alert */}
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Verification Rejected</AlertTitle>
+            <AlertDescription className="mt-2 space-y-2">
+              <p><strong>Reason:</strong> {profile.rejection_reason || 'No reason provided'}</p>
+              <p className="text-sm">Please correct your details below and submit again.</p>
+            </AlertDescription>
+          </Alert>
+
+          {/* Unlocked form for resubmission */}
+          <OnboardingForm />
+        </div>
+      </div>
+    )
+  }
+
   if (profile.ic_document_path) {
-    // User has already submitted
+    // User has already submitted and is pending
     return (
       <div className="flex min-h-[calc(100vh-4.5rem)] items-center justify-center p-4">
         <div className="w-full max-w-md glass-card flex flex-col gap-6 py-6">

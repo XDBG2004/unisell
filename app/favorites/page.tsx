@@ -7,6 +7,7 @@ import { Heart, Trash2, MapPin } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import { toggleFavorite } from "@/app/favorites/actions"
+import { BackButton } from "@/components/back-button"
 
 export default async function FavoritesPage() {
   const supabase = await createClient()
@@ -72,10 +73,13 @@ export default async function FavoritesPage() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-background">
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* Back Button */}
+        <BackButton />
+        
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-[TitleFont] tracking-wide font-normal flex items-center gap-3">
+          <h1 className="text-3xl font-[TitleFont] tracking-wide font-normal">
             My Favorites
           </h1>
           <p className="text-muted-foreground mt-2">

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, Heart, Plus } from "lucide-react"
 import { UserNav } from "@/components/user-nav"
+import { UnreadBadge } from "@/components/unread-badge"
 
 interface NavbarProps {
   user?: {
@@ -15,10 +16,16 @@ interface NavbarProps {
       avatar_url?: string
     }
   } | null
+  isAdmin?: boolean
 }
 
-export function Navbar({ user }: NavbarProps) {
+export function Navbar({ user, isAdmin }: NavbarProps) {
   const pathname = usePathname()
+  
+  // Hide navbar in admin routes
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
 
   // Helper function to check if a path is active
   const isActive = (path: string) => pathname?.startsWith(path)
@@ -70,6 +77,7 @@ export function Navbar({ user }: NavbarProps) {
               >
                 <Link href="/chat">
                   <MessageSquare className="h-5 w-5" />
+                  <UnreadBadge />
                   <span className="sr-only">Chat</span>
                 </Link>
               </Button>
@@ -107,6 +115,7 @@ export function Navbar({ user }: NavbarProps) {
               <UserNav 
                 user={user} 
                 isActive={isActive('/profile') || isActive('/my-listings')}
+                isAdmin={isAdmin}
               />
             </>
           ) : (
