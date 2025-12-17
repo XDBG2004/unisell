@@ -27,6 +27,17 @@ export default async function RootLayout({
 }>) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  
+  let isAdmin = false
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('usm_role')
+      .eq('id', user.id)
+      .single()
+    
+    isAdmin = profile?.usm_role === 'admin'
+  }
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -39,7 +50,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar user={user} />
+          <Navbar user={user} isAdmin={isAdmin} />
           {children}
         </ThemeProvider>
       </body>
