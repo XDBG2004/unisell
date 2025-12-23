@@ -32,8 +32,8 @@ export function DangerZone({ userId, userName }: DangerZoneProps) {
             </div>
             <Button
               onClick={() => setBanDialogOpen(true)}
-              variant="outline"
-              className="border-yellow-600 text-yellow-700 hover:bg-yellow-100"
+              variant="default"
+              className="bg-yellow-600 hover:bg-yellow-700"
             >
               <Ban className="h-4 w-4 mr-2" />
               Ban
@@ -49,7 +49,8 @@ export function DangerZone({ userId, userName }: DangerZoneProps) {
             </div>
             <Button
               onClick={() => setDeleteDialogOpen(true)}
-              variant="destructive"
+              variant="default"
+              className="bg-red-600 hover:bg-red-700"
             >
               <Trash2 className="h-4 w-4 mr-2" />
               Delete

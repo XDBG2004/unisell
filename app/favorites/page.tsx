@@ -8,8 +8,11 @@ import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import { toggleFavorite } from "@/app/favorites/actions"
 import { BackButton } from "@/components/back-button"
+import { checkBanStatus } from "@/utils/ban-check"
 
 export default async function FavoritesPage() {
+  await checkBanStatus()
+  
   const supabase = await createClient()
   
   // Check authentication

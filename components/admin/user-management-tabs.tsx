@@ -20,13 +20,15 @@ interface Profile {
 interface UserManagementTabsProps {
   pendingUsers: Profile[]
   activeUsers: Profile[]
-  defaultTab: string
 }
 
-export function UserManagementTabs({ pendingUsers, activeUsers, defaultTab }: UserManagementTabsProps) {
+export function UserManagementTabs({ pendingUsers, activeUsers }: UserManagementTabsProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
+  // Get current tab from URL, default to 'pending'
+  const currentTab = searchParams.get('tab') || 'pending'
 
   const handleTabChange = (value: string) => {
     // Create new URLSearchParams object to avoid modifying read-only params
@@ -38,7 +40,7 @@ export function UserManagementTabs({ pendingUsers, activeUsers, defaultTab }: Us
   }
 
   return (
-    <Tabs defaultValue={defaultTab} onValueChange={handleTabChange} className="w-full">
+    <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
       <TabsList className="grid w-full grid-cols-2 max-w-md">
         <TabsTrigger value="pending">
           Pending ({pendingUsers?.length || 0})

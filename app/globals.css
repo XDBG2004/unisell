@@ -130,6 +130,11 @@
       ),
       #1e1e1e;
   }
+
+  /* Admin Page Override - Pure Black (Higher Specificity) */
+  .dark .admin-layout {
+    background: #000000 !important;
+  }
 }
 
 @layer components {
@@ -589,5 +594,10 @@
   /* Hover State */
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: #00dee8; /* Neon Cyan on hover! */
+  }
+
+  /* Hide navbar on banned page */
+  body.hide-navbar nav {
+    display: none !important;
   }
 }

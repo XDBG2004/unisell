@@ -1,12 +1,15 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 import { ChatLayoutWrapper } from "@/components/chat/chat-layout-wrapper"
+import { checkBanStatus } from "@/utils/ban-check"
 
 export default async function ChatLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  await checkBanStatus()
+  
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

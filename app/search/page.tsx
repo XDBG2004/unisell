@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server"
+import { checkBanStatus } from "@/utils/ban-check"
 import { redirect } from "next/navigation"
 import { Item } from "@/types"
 import { ItemCard } from "@/components/item-card"
@@ -11,6 +12,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string, category?: string, sub_category?: string, sort?: string }> }) {
+  await checkBanStatus()
+  
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

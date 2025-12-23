@@ -1,5 +1,6 @@
 import { redirect, notFound } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/server"
+import { checkBanStatus } from "@/utils/ban-check";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +17,8 @@ export default async function ListingDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await checkBanStatus()
+  
   const supabase = await createClient();
   const { id } = await params;
 

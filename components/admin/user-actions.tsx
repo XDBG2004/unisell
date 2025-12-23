@@ -35,7 +35,6 @@ export function UserActions({ userId, userName }: UserActionsProps) {
         <Button
           onClick={handleApprove}
           disabled={isApproving}
-          size="lg"
           className="flex-1 bg-green-600 hover:bg-green-700 text-white"
         >
           {isApproving ? (
@@ -48,9 +47,8 @@ export function UserActions({ userId, userName }: UserActionsProps) {
         
         <Button
           onClick={() => setRejectDialogOpen(true)}
-          size="lg"
-          variant="destructive"
-          className="flex-1"
+          variant="default"
+          className="flex-1 bg-red-600 hover:bg-red-700"
         >
           <XCircle className="h-5 w-5 mr-2" />
           Reject User

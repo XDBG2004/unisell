@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server"
+import { checkBanStatus } from "@/utils/ban-check"
 import { redirect } from "next/navigation"
 
 export default async function SettingsPage() {

@@ -147,14 +147,16 @@ export function BanDialog({ userId, userName, open, onOpenChange }: BanDialogPro
 
         <DialogFooter>
           <Button
-            variant="outline"
+            variant="default"
+            className="bg-gray-600 hover:bg-gray-700"
             onClick={handleCancel}
             disabled={isSubmitting}
           >
             Cancel
           </Button>
           <Button
-            variant="destructive"
+            variant="default"
+            className="bg-red-600 hover:bg-red-700"
             onClick={handleSubmit}
             disabled={isSubmitting || reason.trim().length < 10}
           >

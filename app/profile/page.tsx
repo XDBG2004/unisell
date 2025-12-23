@@ -1,11 +1,13 @@
 import { ProfileForm } from "@/components/profile-form"
 import { createClient } from "@/utils/supabase/server"
+import { checkBanStatus } from "@/utils/ban-check"
 import { redirect } from "next/navigation"
 import { getSellerRating } from "@/app/reviews/actions"
 import { Star } from "lucide-react"
 import { BackButton } from "@/components/back-button"
 
 export default async function ProfilePage() {
+  await checkBanStatus()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 

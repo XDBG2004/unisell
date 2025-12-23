@@ -6,6 +6,10 @@ import { AlertTriangle, Clock, LogOut } from "lucide-react"
 import Link from "next/link"
 import { signout } from "@/app/auth/actions"
 
+export const metadata = {
+  title: "Account Suspended - UniSell",
+}
+
 export default async function BannedPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

@@ -22,7 +22,6 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
   }
 
   const { tab } = await searchParams
-  const defaultTab = tab === 'active' ? 'active' : 'pending'
 
   // Fetch pending listings (status = 'pending')
   const { data: pendingListings, error: pendingError } = await supabase
@@ -44,14 +43,14 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
     .eq('status', 'available')
     .order('created_at', { ascending: false })
 
-  // Fetch hidden listings (status = 'sold' or 'deleted')
+  // Fetch hidden listings (status = 'sold', 'deleted', 'rejected', or 'hidden')
   const { data: hiddenListings, error: hiddenError } = await supabase
     .from('items')
     .select(`
       *,
       seller:profiles!seller_id(full_name, campus)
     `)
-    .in('status', ['sold', 'deleted'])
+    .in('status', ['sold', 'deleted', 'rejected', 'hidden'])
     .order('created_at', { ascending: false })
 
   if (pendingError) console.error('Error fetching pending listings:', pendingError)
@@ -73,7 +72,6 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
         pendingListings={pendingListings || []} 
         activeListings={activeListings || []} 
         hiddenListings={hiddenListings || []}
-        defaultTab={defaultTab} 
       />
     </div>
   )

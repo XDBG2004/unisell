@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Mail, School, User, Calendar, CheckCircle, XCircle, Phone, FileText } from "lucide-react"
 import Link from "next/link"
+import { AdminBackButton } from "@/components/admin/admin-back-button"
 import { UserActions } from "@/components/admin/user-actions"
 import { DangerZone } from "@/components/admin/danger-zone"
 
@@ -73,15 +74,10 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
   return (
     <div className="p-8 space-y-6">
       {/* Back Button */}
-      <Button variant="ghost" size="sm" asChild>
-        <Link href={user.verification_status === 'verified' ? "/admin/users?tab=active" : "/admin/users?tab=pending"}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Users
-        </Link>
-      </Button>
+      <AdminBackButton />
 
       {/* User Detail Card */}
-      <div className="bg-white dark:bg-[#1e1e1e] border-2 rounded-xl p-8 space-y-6">
+      <div className="bg-white dark:bg-[#1e1e1e] shadow-md rounded-xl p-8 space-y-6">
         {/* Compact Header */}
         <div className="flex flex-col gap-2 border-b pb-6">
           <div className="flex flex-wrap items-center gap-3">
@@ -202,11 +198,6 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
           </div>
         )}
 
-        {/* Danger Zone - Only show for verified or rejected users, AND not for self */}
-        {user.verification_status !== 'pending' && currentUser?.id !== user.id && (
-          <DangerZone userId={user.id} userName={user.full_name} />
-        )}
-
         {/* Self Profile Notice */}
         {currentUser?.id === user.id && (
            <div className="pt-6 border-t border-yellow-200 dark:border-yellow-900">
@@ -285,6 +276,11 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
               <span className="font-medium">This user is already verified</span>
             </div>
           </div>
+        )}
+
+        {/* Danger Zone - Only show for verified or rejected users, AND not for self - MOVED TO BOTTOM */}
+        {user.verification_status !== 'pending' && currentUser?.id !== user.id && (
+          <DangerZone userId={user.id} userName={user.full_name} />
         )}
       </div>
     </div>

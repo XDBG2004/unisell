@@ -27,13 +27,15 @@ interface ListingManagementTabsProps {
   pendingListings: Listing[]
   activeListings: Listing[]
   hiddenListings: Listing[]
-  defaultTab: string
 }
 
-export function ListingManagementTabs({ pendingListings, activeListings, hiddenListings, defaultTab }: ListingManagementTabsProps) {
+export function ListingManagementTabs({ pendingListings, activeListings, hiddenListings }: ListingManagementTabsProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
+  // Get current tab from URL, default to 'pending'
+  const currentTab = searchParams.get('tab') || 'pending'
 
   const handleTabChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -123,7 +125,7 @@ export function ListingManagementTabs({ pendingListings, activeListings, hiddenL
   )
 
   return (
-    <Tabs defaultValue={defaultTab} onValueChange={handleTabChange} className="w-full">
+    <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
       <TabsList className="grid w-full grid-cols-3 max-w-md">
         <TabsTrigger value="pending">
           Pending ({pendingListings?.length || 0})

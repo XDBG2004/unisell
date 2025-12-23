@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button"
 import { Search, ChevronLeft, ChevronRight, Smartphone, Shirt, Armchair, Book, Home as HomeIcon, Car, Package } from "lucide-react"
 import Image from "next/image"
 import { createClient } from "@/utils/supabase/server"
+import { redirect } from "next/navigation"
 import { AnnouncementBar } from "@/components/announcement-bar"
 import { CategoryRail } from "@/components/category-rail"
 import { LandingPage } from "@/components/landing-page"
 import { SearchBar } from "@/components/search-bar"
 import { ItemGridSkeleton } from "@/components/skeletons/item-grid-skeleton"
 import { ItemsGrid } from "@/components/items-grid"
+import { AnnouncementCarousel } from "@/components/announcement-carousel"
+import { getActiveAnnouncements, getAnnouncementBar } from "@/app/admin/announcements-actions"
 
 
 
@@ -18,12 +21,20 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
   const { data: { user } } = await supabase.auth.getUser()
 
   if (user) {
-    // Fetch profile for verification status
+    // Fetch profile for verification status and ban status
     const { data: profile } = await supabase
       .from('profiles')
-      .select('verification_status, campus')
+      .select('verification_status, campus, banned_until')
       .eq('id', user.id)
       .single()
+
+    // Check if banned - redirect to banned page
+    if (profile?.banned_until) {
+      const bannedUntil = new Date(profile.banned_until)
+      if (bannedUntil > new Date()) {
+        redirect('/banned')
+      }
+    }
 
     const isVerified = profile?.verification_status === 'verified'
 
@@ -100,28 +111,24 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ s
       }
     })
 
+    // Fetch data in parallel
+    const [announcementsResult, barResult] = await Promise.all([
+      getActiveAnnouncements(),
+      getAnnouncementBar()
+    ])
+
+    const announcements = announcementsResult.data || []
+    const barContent = barResult.content
+
     return (
       <div className="min-h-screen flex flex-col">
-        <AnnouncementBar />
+        <AnnouncementBar initialContent={barContent} />
 
         <main className="flex-1">
-          {/* Hero Section */}
-          <section className="bg-linear-to-r from-cyan-600 to-cyan-400 dark:from-cyan-900 dark:to-cyan-700 text-white py-16">
-            <div className="container mx-auto px-4">
-              <div className="flex items-center justify-between">
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-                <div className="text-center flex-1">
-                  <h1 className="text-4xl font-bold mb-4">Welcome to UniSell</h1>
-                  <p className="text-lg opacity-90">Buy and sell items within your {profile?.campus || 'USM'} Campus community</p>
-                </div>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
-              </div>
-            </div>
-          </section>
+          {/* Hero Section - Dynamic Carousel */}
+          {announcements.length > 0 && (
+            <AnnouncementCarousel announcements={announcements} />
+          )}
 
           {/* Search Bar Section */}
           <section className="py-6 bg-background">

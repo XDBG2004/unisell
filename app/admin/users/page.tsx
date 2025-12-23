@@ -3,8 +3,6 @@ import { UserManagementTabs } from "@/components/admin/user-management-tabs"
 
 export default async function UsersPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const supabase = await createClient()
-  const { tab } = await searchParams
-  const defaultTab = tab === 'active' ? 'active' : 'pending'
 
   // Fetch pending users
   const { data: pendingUsers, error: pendingError } = await supabase
@@ -35,7 +33,6 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
       <UserManagementTabs 
         pendingUsers={pendingUsers || []} 
         activeUsers={activeUsers || []} 
-        defaultTab={defaultTab} 
       />
     </div>
   )

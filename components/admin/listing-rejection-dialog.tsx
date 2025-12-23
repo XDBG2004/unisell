@@ -12,18 +12,18 @@ import {
 } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { rejectUser } from "@/app/admin/actions"
+import { rejectListing } from "@/app/admin/actions"
 import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 
-interface RejectionDialogProps {
-  userId: string
-  userName: string
+interface ListingRejectionDialogProps {
+  listingId: string
+  listingTitle: string
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function RejectionDialog({ userId, userName, open, onOpenChange }: RejectionDialogProps) {
+export function ListingRejectionDialog({ listingId, listingTitle, open, onOpenChange }: ListingRejectionDialogProps) {
   const router = useRouter()
   const [reason, setReason] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -38,14 +38,14 @@ export function RejectionDialog({ userId, userName, open, onOpenChange }: Reject
     setIsSubmitting(true)
     setError("")
 
-    const result = await rejectUser(userId, reason)
+    const result = await rejectListing(listingId, reason)
 
     if (result.success) {
       onOpenChange(false)
       setReason("")
       router.refresh()
     } else {
-      setError(result.error || "Failed to reject user")
+      setError(result.error || "Failed to reject listing")
       setIsSubmitting(false)
     }
   }
@@ -60,9 +60,9 @@ export function RejectionDialog({ userId, userName, open, onOpenChange }: Reject
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Reject Verification</DialogTitle>
+          <DialogTitle>Reject Listing</DialogTitle>
           <DialogDescription>
-            Provide a clear reason for rejecting {userName}'s verification. They will see this message.
+            Provide a clear reason for rejecting "{listingTitle}". The seller will see this message and can edit the listing to address your concerns.
           </DialogDescription>
         </DialogHeader>
 
@@ -71,7 +71,7 @@ export function RejectionDialog({ userId, userName, open, onOpenChange }: Reject
             <Label htmlFor="reason">Rejection Reason *</Label>
             <Textarea
               id="reason"
-              placeholder="e.g., IC image is blurry, name doesn't match, document is incomplete..."
+              placeholder="e.g., Images are blurry, description is unclear, item violates community guidelines..."
               value={reason}
               onChange={(e) => {
                 setReason(e.target.value)

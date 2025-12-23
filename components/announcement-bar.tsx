@@ -3,15 +3,21 @@
 import { useState } from "react"
 import { X } from "lucide-react"
 
-export function AnnouncementBar() {
-  const [isVisible, setIsVisible] = useState(true)
+interface AnnouncementBarProps {
+  initialContent: string | null
+}
 
-  if (!isVisible) return null
+export function AnnouncementBar({ initialContent }: AnnouncementBarProps) {
+  const [isVisible, setIsVisible] = useState(!!initialContent)
+
+  if (!isVisible || !initialContent) return null
 
   return (
-    <div className="bg-[#00adb5] dark:bg-[#00dee8] text-primary-foreground px-4 py-2 text-sm font-medium relative">
-      <div className="container mx-auto flex items-center justify-center text-center pr-8">
-        <p>Welcome to UniSell! The exclusive marketplace for USM students.</p>
+    <div className="group bg-[#00adb5] dark:bg-[#00dee8] text-primary-foreground px-4 py-2 text-sm font-medium sticky top-16 z-40 transition-all duration-300 ease-in-out">
+      <div className="container mx-auto flex items-center justify-start pr-8">
+        <p className="truncate group-hover:whitespace-normal group-hover:text-clip group-hover:overflow-visible w-full cursor-default transition-all duration-300 ease-in-out" title={initialContent}>
+          {initialContent}
+        </p>
       </div>
       <button
         onClick={() => setIsVisible(false)}

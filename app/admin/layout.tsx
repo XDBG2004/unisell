@@ -50,7 +50,7 @@ export default async function AdminLayout({
         <AdminHeader />
 
         {/* Scrollable Content */}
-        <main className="flex-1 overflow-y-auto bg-background">
+        <main className="flex-1 overflow-y-auto bg-background admin-layout">
           {children}
         </main>
       </div>

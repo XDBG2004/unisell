@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server"
+import { checkBanStatus } from "@/utils/ban-check"
 import { redirect } from "next/navigation"
 import { ItemCard } from "@/components/item-card"
 import Link from "next/link"
@@ -7,6 +8,7 @@ import { Item } from "@/types"
 import { BackButton } from "@/components/back-button"
 
 export default async function OrdersPage() {
+  await checkBanStatus()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
