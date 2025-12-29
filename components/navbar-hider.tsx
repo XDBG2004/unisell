@@ -7,8 +7,10 @@ export function NavbarHider() {
   const pathname = usePathname()
   
   useEffect(() => {
-    // Hide navbar on banned page
-    if (pathname?.startsWith('/banned')) {
+    // Hide navbar on banned page and auth pages
+    if (pathname?.startsWith('/banned') || 
+        pathname?.startsWith('/forgot-password') || 
+        pathname?.startsWith('/reset-password')) {
       document.body.classList.add('hide-navbar')
       return
     }
@@ -26,7 +28,10 @@ export function NavbarHider() {
     }
     
     return () => {
-      if (!pathname?.startsWith('/banned') && !is404) {
+      if (!pathname?.startsWith('/banned') && 
+          !pathname?.startsWith('/forgot-password') && 
+          !pathname?.startsWith('/reset-password') && 
+          !is404) {
         document.body.classList.remove('hide-navbar')
       }
     }
