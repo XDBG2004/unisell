@@ -80,7 +80,10 @@ export function LoginForm() {
           </Button>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-center">
+      <CardFooter className="flex flex-col gap-4 justify-center">
+        <Link href="/forgot-password" className="text-sm text-cyan-500 hover:underline">
+          Forgot Password?
+        </Link>
         <p className="text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-cyan-500 hover:underline">
