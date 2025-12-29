@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { NavbarHider } from "@/components/navbar-hider";
+import { AutoLogout } from "@/components/auth/auto-logout";
 import { createClient } from "@/utils/supabase/server";
 
 const geistSans = Geist({
@@ -52,6 +53,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NavbarHider />
+          {user && <AutoLogout timeoutMs={1800000} />}
           <Navbar user={user} isAdmin={isAdmin} />
           {children}
         </ThemeProvider>
