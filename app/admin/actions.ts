@@ -1,21 +1,8 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
-
-// Create admin client for auth operations
-const getAdminClient = () => {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  
-  return createAdminClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  });
-};
+import { createAdminClient } from "@/utils/supabase/admin";
 
 export async function approveUser(userId: string) {
   const supabase = await createClient();
@@ -216,103 +203,98 @@ export async function banUser(
   return { success: true };
 }
 
+
+
 export async function deleteUser(userId: string) {
   console.log("[deleteUser] Starting deletion for userId:", userId);
 
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
+    const adminClient = createAdminClient();
 
-  // Verify admin access
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return { success: false, error: "Not authenticated" };
-  }
-
-  // Check if trying to delete self
-  if (user.id === userId) {
-    return { success: false, error: "You cannot delete yourself" };
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("usm_role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.usm_role !== "admin") {
-    return { success: false, error: "Not authorized" };
-  }
-
-  // Fetch user data to get file paths
-  const { data: targetUser } = await supabase
-    .from("profiles")
-    .select("ic_document_path")
-    .eq("id", userId)
-    .single();
-
-  console.log(
-    "[deleteUser] Target user IC path:",
-    targetUser?.ic_document_path
-  );
-
-  // Delete IC document if exists
-  if (targetUser?.ic_document_path) {
-    const { error: icDeleteError } = await supabase.storage
-      .from("private-documents")
-      .remove([targetUser.ic_document_path]);
-
-    if (icDeleteError) {
-      console.error("[deleteUser] Failed to delete IC:", icDeleteError);
+    // Verify admin access
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    
+    if (!user) {
+      throw new Error("Not authenticated");
     }
-  }
 
-  // List and delete all item images from this user
-  const { data: userFolder } = await supabase.storage
-    .from("items")
-    .list(userId);
-
-  if (userFolder && userFolder.length > 0) {
-    const filePaths = userFolder.map((file) => `${userId}/${file.name}`);
-    console.log("[deleteUser] Deleting item images:", filePaths);
-
-    const { error: itemImagesError } = await supabase.storage
-      .from("items")
-      .remove(filePaths);
-
-    if (itemImagesError) {
-      console.error(
-        "[deleteUser] Failed to delete item images:",
-        itemImagesError
-      );
+    // Check if trying to delete self
+    if (user.id === userId) {
+      throw new Error("You cannot delete yourself");
     }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("usm_role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.usm_role !== "admin") {
+      throw new Error("Not authorized");
+    }
+
+    // Step 1: Storage Cleanup
+    // 1a. Delete IC/Verification photo from 'private-documents' (referenced as verifications)
+    const { data: targetUser } = await supabase
+      .from("profiles")
+      .select("ic_document_path")
+      .eq("id", userId)
+      .single();
+
+    if (targetUser?.ic_document_path) {
+      console.log("[deleteUser] Deleting IC:", targetUser.ic_document_path);
+      const { error: icDeleteError } = await supabase.storage
+        .from("private-documents")
+        .remove([targetUser.ic_document_path]);
+
+      if (icDeleteError) {
+        console.error("[deleteUser] Failed to delete IC:", icDeleteError);
+        // Continue even if storage delete fails
+      }
+    }
+
+    // 1b. Delete item images from 'public-items' (referenced as items)
+    // We list all files in the user's folder since all their item images are stored under their userId prefix
+    const { data: userFiles } = await supabase.storage
+      .from("public-items")
+      .list(userId);
+
+    if (userFiles && userFiles.length > 0) {
+      const filePaths = userFiles.map((file) => `${userId}/${file.name}`);
+      console.log(`[deleteUser] Deleting ${filePaths.length} item images`);
+
+      const { error: itemImagesError } = await supabase.storage
+        .from("public-items")
+        .remove(filePaths);
+
+      if (itemImagesError) {
+        console.error(
+          "[deleteUser] Failed to delete item images:",
+          itemImagesError
+        );
+      }
+    }
+
+    // Step 2: The Nuclear Delete (Auth User)
+    // This will cascade to Profile, Items, Messages, etc.
+    const { error: authDeleteError } = await adminClient.auth.admin.deleteUser(userId);
+    
+    if (authDeleteError) {
+      throw authDeleteError;
+    }
+
+    // Step 3: Response
+    revalidatePath("/admin/users");
+    console.log("[deleteUser] Success!");
+    return { success: true };
+
+  } catch (error: any) {
+    console.error("[deleteUser] Error:", error);
+    return { success: false, error: error.message || "An unexpected error occurred" };
   }
-
-  // Delete from Supabase Auth first (this is the authentication user)
-  // Use admin client with service role key
-  const adminClient = getAdminClient();
-  const { error: authDeleteError } = await adminClient.auth.admin.deleteUser(userId);
-  
-  if (authDeleteError) {
-    console.error("[deleteUser] Error deleting auth user:", authDeleteError);
-    return { success: false, error: `Failed to delete auth user: ${authDeleteError.message}` };
-  }
-
-  // Delete profile (CASCADE will handle related data: items, conversations, messages, reviews, reports, favorites)
-  const { error: deleteError } = await supabase
-    .from("profiles")
-    .delete()
-    .eq("id", userId);
-
-  if (deleteError) {
-    console.error("[deleteUser] Error deleting profile:", deleteError);
-    return { success: false, error: deleteError.message };
-  }
-
-  revalidatePath("/admin/users");
-
-  console.log("[deleteUser] Success!");
-  return { success: true };
 }
 
 export async function approveListing(listingId: string) {
