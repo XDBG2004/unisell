@@ -361,7 +361,7 @@ export default function ChatPage() {
               trigger={
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                   <Flag className="mr-2 h-4 w-4 text-red-600" />
-                  <span className="text-red-600">Report User</span>
+                  <span className="text-red-600">Report</span>
                 </DropdownMenuItem>
               }
             />
@@ -456,7 +456,7 @@ export default function ChatPage() {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type a message..."
-                className="flex-1"
+                className="flex-1 placeholder:text-gray-400 dark:placeholder:text-gray-600"
               />
               <Button 
                 type="submit" 
